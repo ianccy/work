@@ -415,7 +415,6 @@ footer::after {
 }
 .footer-post-content {
     float: left;
-    padding: 20px 0;
     padding: 20px 0 20px 10px;
 }
 .footer-3 li {
@@ -493,6 +492,17 @@ footer h3 {
   .content {
     width: 750px;
   } 
+  .product {
+    width:47%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+  }
+  .pro-des {
+    width: 90%;
+  }
+  .mobile-phone {
+    display: none;
+  }
 }
 @media screen and (max-width: 550px) {
 	.content {
@@ -502,4 +512,37 @@ footer h3 {
  	 margin-right: auto;
  	 margin-left: auto;
 	}
+    .product {
+    width:90%;
+    margin: 3% 5%;
+  }
+  .col-4 {
+    width: 100%;
+}
+    .footer-3 li {
+        margin: 0 0 0 15px;
+        float: left;
+    }
+    .brand-list img {
+    height: 45px;
+    }
+    .product-line-2::after {
+    width: 50%;
+}
+    .product-line::after {
+    width: 55%;
+}
+    h2 {
+    font-size: 20px;
+    padding-bottom: 15px;
+}
+    .visit {
+    right: 16px;
+    bottom: 1px;
+}
+    .visit a {
+    padding: 7px 5px;
+}
+
+
 }
