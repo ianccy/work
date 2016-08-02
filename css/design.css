@@ -57,7 +57,7 @@ a:hover {
 }
 .topbar {
     background: #fff;
-    padding: 15px 0 25px 0;
+    padding: 15px 0 26px 0;
     border-bottom: 1px solid #fff;
     box-shadow: 0.1px 0.1px 0.1px;
     position: relative;
@@ -511,7 +511,7 @@ footer h3 {
     display: none;
   }
 }
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 768px) {
 	.content {
 	width:100%;
  	 padding-right: 15px;
@@ -550,10 +550,8 @@ footer h3 {
     .visit a {
     padding: 7px 5px;
 }
-.navbar ul {
-    display:none; 
-}
 .navbar {
+    display:none; 
     position: initial;
 }
 .navbar::after {
@@ -568,8 +566,9 @@ footer h3 {
     right: 5px;
     position: relative;
     top: -8px;
-    border-radius: 10px;
+    border-radius: 6px;
     background: #fff;
+    border: 2px solid #ab8c8c;
 }
 .buy {
     bottom: 550px;
@@ -579,6 +578,23 @@ footer h3 {
 }
 .navbar::before {
     display: none;
+}
+.navbar li {
+    display: block;
+    text-align: center;
+    border-bottom: 1px solid #ffffff;
+}
+.navbar a {
+    padding: 10px 0;
+}
+.navbar {
+    left: 0;
+    position: absolute;
+    padding: 0;
+    z-index: 900;
+    top: 78px;
+    width: 100%;
+    background: #eee;
 }
 .menu-line {
 background: #838383;
@@ -689,9 +705,12 @@ background: #838383;
 }
 .user-right li {
     display: block;
-    padding: 10px 0;
     text-align: center;
     border-bottom: 1px solid #ffffff;
+}
+.user-right a {
+    padding: 10px 0;
+    display: block;
 }
 h2 {
     font-size: 16px;

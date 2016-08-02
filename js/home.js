@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$("button").click(function() {
-		$('.navbar').toggle();
+		$('.navbar').toggle('slow');
 	});
 		$("#search").click(function() {
 		$('.social').toggle('slow');
