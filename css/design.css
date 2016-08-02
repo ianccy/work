@@ -471,6 +471,13 @@ footer h3 {
     float: right;
     color: #fff;
 }
+  .nacicon {
+    display: none;
+  }
+  .mobile-logo,.mobile-nav {
+    display: none;
+}
+
 @media screen and (max-width: 1200px) {
 	.content {
 		width: 1170px;
@@ -543,6 +550,147 @@ footer h3 {
     .visit a {
     padding: 7px 5px;
 }
-
-
+.navbar ul {
+    display:none; 
+}
+.navbar {
+    position: initial;
+}
+.navbar::after {
+    position: absolute;
+    top: 160px;
+}
+.nacicon {
+    width: 35px;
+    display: block;
+    padding: 5px 0;
+    float: right;
+    right: 5px;
+    position: relative;
+    top: -8px;
+    border-radius: 10px;
+    background: #fff;
+}
+.buy {
+    bottom: 550px;
+    }
+.user-right li {
+    margin: 0px 3px;
+}
+.navbar::before {
+    display: none;
+}
+.menu-line {
+background: #838383;
+    height: 2px;
+    width: 75%;
+    display: block;
+    margin: 0 auto;
+    margin-top: 3px;
+}
+.user-right {
+    top: 115px;
+    left: 15px;
+}
+.mobile-logo {
+    display: block;
+    float: left;
+    position: absolute;
+    top: -10px;
+    height: 34px;
+}
+.social {
+    left: 0;
+    top: 35px;
+    text-align: center;
+    z-index: 900;
+    display: none;
+}
+.social-list {
+    background: #eee;
+    position: relative;
+    top: -40px;
+}
+.mobile-logo img {
+    max-height: 100%;
+}
+.mobile-nav {
+    display: block;
+    text-align: center;
+    font-size: 30px;
+    clear:both;
+}
+.social input {
+    padding: 9px 33px;
+    left: 16%;
+    top: 10px;
+}
+.p45{
+    padding: 0;
+    overflow: inherit;
+}
+.mobile-nav li {
+    float: left;
+    width: 25%;
+    background: #ece9e9;
+}
+.mobile-nav a {
+    text-decoration: none;
+    color:#000;
+}
+.logo {
+    display: none;
+}
+.left-bar {
+    display: none;
+}
+.social-list li {
+    display: block;
+    padding: 5px 0;
+    border-bottom: 1px solid #ffffff;
+}
+.social-list .mobile-padding0 {
+    padding: 0;
+}
+.banner-main {
+    margin-top: 10px;
+}
+.buy , .footer-1{
+    display: none;
+}
+.left-bar {
+    width: 100%;
+    float: left;
+    background: #eee;
+    position: absolute;
+    top: 62px;
+    z-index: 900;
+}
+.wid100 {
+    padding: 0;
+}
+.user-left {
+    color: #8f8f8f;
+    float: left;
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ffffff;
+}
+.user-right {
+    top: 62px;
+    left: 0px;
+    background: #eee;
+    z-index: 900;
+    display: none;
+}
+.navbar::after {
+    display: none;
+}
+.user-right li {
+    display: block;
+    padding: 10px 0;
+    text-align: center;
+    border-bottom: 1px solid #ffffff;
+}
 }

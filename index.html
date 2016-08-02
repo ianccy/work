@@ -6,20 +6,27 @@
 <meta name="description" content="前端作業">
 <meta name="keywords" content="">
 <meta name="robots" content="noindex">
-<script src="js/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+<script src="js/home.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <link rel="stylesheet" href="css/design.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="content ps-thing">
-  <div class="left-bar">
-      <div class="user-left">Language:<a href="">English</a></div>
-      <div class="user-left">Currency:<a href="">EEUR</a></div>
-      <div class="user-left mobile-phone">Telephone:<a href="">+565 975 658</a></div>
-  </div>
+<h2 class="mobile-logo"><a href="/"><img src="img/logo.png" alt=""></a></h2>
+  <div class="content ps-thing wid100">
+  <ul class="left-bar">
+      <li class="user-left">Language:<a href="">English</a></li>
+      <li class="user-left">Currency:<a href="">EEUR</a></li>
+      <li class="user-left mobile-phone">Telephone:<a href="">+565 975 658</a></li>
+  </ul>
+  <button class="nacicon">
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+  </button>
   <ul class="user-right">
     <li class="user-right-list"><a href="/">My Account</a></li>
     <li class="user-right-list"><a href="/">Login</a></li>
@@ -30,10 +37,18 @@
 </header>
 <div class="content ps-thing p45">
   <h1 class="logo"><a href="/"><img src="img/logo.png" alt=""></a></h1>
+  <div class="mobile-nav">
+  <ul>
+  <li id="search"><i class="fa fa-search"></i></li>
+  <li id="setting"><i class="fa fa-cog" ></i></li>
+  <li id="account"><i class="fa fa-user" ></i></li>
+  <li><i class="fa fa-cart-arrow-down"></i></li>
+  </ul>
+</div>
   <div class="social">
   <ul class="social-list">
-  <li>
-    <input type="text" name="search" placeholder="Search...">
+  <li class="mobile-padding0">
+    <input  type="text" name="search" placeholder="Search...">
     </li>
       <li><a href=""><img class="top-index" src="img/social-search.png" alt=""></a></li>
       <li><a href=""><img src="img/social_rss.png" alt=""></a></li>

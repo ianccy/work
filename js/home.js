@@ -1,5 +1,15 @@
 $(document).ready(function() {
-	$(".nacicon").click(function() {
-		$("p").toggle();
+	$("button").click(function() {
+		$('.navbar').toggle();
 	});
+		$("#search").click(function() {
+		$('.social').toggle('slow');
+	});
+		$("#setting").click(function() {
+		$('.left-bar').toggle('slow');
+	});
+		$("#account").click(function() {
+		$('.user-right').toggle('slow');
+	});
+
 });
