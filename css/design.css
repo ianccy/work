@@ -693,4 +693,7 @@ background: #838383;
     text-align: center;
     border-bottom: 1px solid #ffffff;
 }
+h2 {
+    font-size: 16px;
+}
 }
