@@ -716,7 +716,19 @@ background: #838383;
     padding: 10px 0;
     display: block;
 }
+.footer-post-content {
+    padding: 20px 0;
+    width: 80%;
+    text-align: center;
+}
+.footer-post img {
+    width: 20%;
+}
 h2 {
     font-size: 16px;
+}
+.copyright {
+    margin-top: 12px;
+    color: #fff;
 }
 }
