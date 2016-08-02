@@ -57,7 +57,7 @@ a:hover {
 }
 .topbar {
     background: #fff;
-    padding: 15px 0 26px 0;
+    padding: 15px 0 29px 0;
     border-bottom: 1px solid #fff;
     box-shadow: 0.1px 0.1px 0.1px;
     position: relative;
@@ -637,9 +637,9 @@ background: #838383;
     clear:both;
 }
 .social input {
-    padding: 9px 33px;
+    padding: 5px 33px;
     left: 16%;
-    top: 10px;
+    top: 5px;
 }
 .p45{
     padding: 0;
