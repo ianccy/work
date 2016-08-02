@@ -635,6 +635,7 @@ background: #838383;
     text-align: center;
     font-size: 30px;
     clear:both;
+    margin: 0;
 }
 .social input {
     padding: 5px 33px;
@@ -649,6 +650,9 @@ background: #838383;
     float: left;
     width: 25%;
     background: #ece9e9;
+    position: relative;
+    width: 25%;
+    top: -3px;
 }
 .mobile-nav a {
     text-decoration: none;
