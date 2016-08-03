@@ -6,33 +6,60 @@
 <meta name="description" content="前端作業">
 <meta name="keywords" content="">
 <meta name="robots" content="noindex">
-<script src="js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+<script src="js/swiper.jquery.min.js"></script>
+<script src="js/home.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<link rel="stylesheet" href="design.css">
+<link rel="stylesheet" href="css/design.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link rel="stylesheet" href="css/swiper.css">
 </head>
 <body>
 <header class="topbar">
-  <div class="content ps-thing">
-  <div class="left-bar">
-      <div class="user-left">Language:<a href="">English</a></div>
-      <div class="user-left">Currency:<a href="">EEUR</a></div>
-      <div class="user-left">Telephone:<a href="">+565 975 658</a></div>
-  </div>
+<h2 class="mobile-logo"><a href=""><img src="img/logo.png" alt=""></a></h2>
+  <div class="content ps-thing wid100">
+  <ul class="left-bar">
+      <li class="user-left">Language:<a href="">English</a><i id="language" class="fa fa-caret-down"></i></li>
+      <ul class="language-list">
+        <li><a href="">chinese</a></li>
+        <li><a href="">janpanese</a></li>
+      </ul>
+      <li class="user-left">Currency:<a href="">EEUR</a><i id="dollar" class="fa fa-caret-down"></i></li>
+            <ul class="dollar-list">
+        <li><a href="">TWD</a></li>
+        <li><a href="">JPY</a></li>
+      </ul>
+      <li class="user-left mobile-phone">Telephone:<a href="">+565 975 658</a></li>
+  </ul>
+  <button class="nacicon">
+  <a href=""></a>
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+    <span class="menu-line"></span>
+  </button>
   <ul class="user-right">
-    <li class="user-right-list"><a href="/">My Account</a></li>
-    <li class="user-right-list"><a href="/">Login</a></li>
-    <li class="user-right-list"><a href="/">Register</a></li>
-    <li class="user-right-list fourth"><a href="/">Checkout</a></li>
+    <li class="user-right-list"><a href="">My Account</a></li>
+    <li class="user-right-list"><a href="">Login</a></li>
+    <li class="user-right-list"><a href="">Register</a></li>
+    <li class="user-right-list fourth"><a href="">Checkout</a></li>
     </ul>
   </div>
 </header>
 <div class="content ps-thing p45">
-  <h1 class="logo"><a href="/"><img src="img/logo.png" alt=""></a></h1>
+  <h1 class="logo"><a href=""><img src="img/logo.png" alt=""></a></h1>
+  <div class="mobile-nav">
+  <ul>
+  <li id="search"><i class="fa fa-search"></i></li>
+  <li id="setting"><i class="fa fa-cog" ></i></li>
+  <li id="account"><i class="fa fa-user" ></i></li>
+  <li><i class="fa fa-cart-arrow-down"></i></li>
+  </ul>
+</div>
   <div class="social">
   <ul class="social-list">
-  <li>
-    <input type="text" name="search" placeholder="Search...">
+  <li class="mobile-padding0">
+    <input  type="text" name="search" placeholder="Search...">
     </li>
       <li><a href=""><img class="top-index" src="img/social-search.png" alt=""></a></li>
       <li><a href=""><img src="img/social_rss.png" alt=""></a></li>
@@ -64,7 +91,18 @@
 <div class="banner">
   <div class="content ps-thing">
     <div class="banner-main">
-      <img src="img/banner.png" alt="">
+          <div class="swiper-container nohide">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="img/banner.png" alt=""></div>
+            <div class="swiper-slide"><img src="img/banner.png" alt=""></div>
+            <div class="swiper-slide"><img src="img/banner.png" alt=""></div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
       <h2>CHECK OUR AMAZING OFFERS,VISIT OUR STORE NOW</h2>
           <div class="visit">
     <a href="">
@@ -75,7 +113,15 @@
   </div>
 </div>
 <section class="content pos-rel">
-  <span class="product-line">RECENT PRODUCTS</span>
+    <div class="swiper-container2">
+              <span class="product-line">RECENT PRODUCTS</span>
+   <div class="control-bar">
+   <div class="next"><i class="fa fa-chevron-right "></i></div>
+   <div class="prev"><i class="fa fa-chevron-left"></i></div>
+   </div>
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide">
   <div class="product-list">
     <div class="product mg-left0"><img src="img/sell-item-01.png" alt="">
     <div class="special">SALE</div> 
@@ -132,9 +178,25 @@
     </div>
     </div>
   </div>
+
+            </div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination2"></div>
+        <!-- Add Arrows -->
+    </div>
 </section>
 <section class="content pos-rel">
-  <span class="product-line-2">FEATURED PRODUCTS</span>
+    <div class="swiper-container2">
+              <span class="product-line-2">FEATURED PRODUCTS</span>
+   <div class="control-bar">
+   <div class="next"><i class="fa fa-chevron-right "></i></div>
+   <div class="prev"><i class="fa fa-chevron-left"></i></div>
+   </div>
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide">
+
   <div class="product-list">
     <div class="product mg-left0"><img src="img/sell-item-05.png" alt=""> 
     <div class="product-add">
@@ -190,6 +252,12 @@
     </div>
     </div>
   </div>
+              </div>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination2"></div>
+        <!-- Add Arrows -->
+    </div>
 </section>
 <section class="content pos-rel">
   <span class="product-line-3">CHECK OUR BRANDS</span>
