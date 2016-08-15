@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="zh-hant">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv ="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=1" />
+<link rel="shortcut icon" href="">
+<title></title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="" />
+<meta itemprop="name" content="">
+<meta name="description" content="">
+<meta name="robots" content="noindex">
+<meta property="og:description" content="" />
+<meta itemprop="description" content="">
+<meta property="og:image" content="" />
+<meta itemprop="image" content="" />
+<meta property="og:url" content="" />
+<meta itemprop="url" content="">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+</head>
+<script type="text/javascript">
+$(function(){
+  $('.content').hide();
+  $('#search').bind('click',(function(){
+  $.ajax({
+    type:'GET',
+    url:'http://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AF&CaseNo2=1&FileType=2&Lang=C&FolderType=O',
+    success:function(data){
+      $('.content').show();
+      $('.content-list').html('');
+    var thisData = JSON.parse(data);
+    $.each(thisData,function(i,item){
+      if($('#dist').val()==item['行政區']){
+        work = '<li>\
+        <h2>'+item["測  照  地  點"]+'</h2>\
+        <p>拍照方向：'+item['測照方向']+'</p>\
+        <p>偵測類型：'+item['功能']+'</p>\
+        <p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>\
+        地圖觀看</a>\
+        </p>\
+      </li>';
+      $('.content-list').append(work);
+          } 
+        });
+      }
+    });
+  }));
+});
+
+</script>
+<body>
+
+  <div class="container">
+    <div class="banner">
+      <h1>測試照相</h1>
+      <p></p>
+      <form>
+        <div class="form-style">
+          <div class="select-style">
+            <select name="abc" id="dist">
+              <option value="三民區">三民區</option>
+              <option value="小港區">小港區</option>
+              <option value="左營區">左營區</option>
+              <option value="前鎮區">前鎮區</option>
+              <option value="苓雅區">苓雅區</option>
+              <option value="前金區">前金區</option>
+              <option value="新興區">新興區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="鼓山區">鼓山區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="鹽埕區">鹽埕區</option>
+              <option value="鳳山區">鳳山區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="大寮區">大寮區</option>
+              <option value="仁武區">仁武區</option>
+              <option value="林園區">林園區</option>
+              <option value="岡山區">岡山區</option>
+              <option value="路竹區">路竹區</option>
+              <option value="旗山區">旗山區</option>
+              <option value="橋頭區">橋頭區</option>
+              <option value="燕巢區">燕巢區</option>
+              <option value="美濃區">美濃區</option>
+              <option value="鳥松區">鳥松區</option>
+              <option value="湖內區">湖內區</option>
+              <option value="梓官區">梓官區</option>
+              <option value="永安區">永安區</option>
+              <option value="茄萣區">茄萣區</option>
+              <option value="彌陀區">彌陀區</option>
+              <option value="六龜區">六龜區</option>
+              <option value="大社區">大社區</option>
+            </select>
+          </div>
+            <!-- <input type="submit" value="搜尋" id="serch"> -->
+            <a href="#list" id="search" class="anchor" >搜尋</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="content" id="list">
+      <ul class="content-list">
+
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
