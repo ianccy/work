@@ -108,11 +108,12 @@ $(function(){
       </ul>
     </div>
 
+  </div>
     <div id="map">
     </div>
-  </div>
-<script>
-  
+    <div id="map"></div>
+    <script>
+
 // The following example creates complex markers to indicate beaches near
 // Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
 // to the base of the flagpole.
@@ -172,7 +173,10 @@ function setMarkers(map) {
     });
   }
 }
-</script>
+
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKHiwZTnzIDam9bK8vzk5mhu2rl8z48CQ&signed_in=true&callback=initMap"></script>
 
 </body>
 
