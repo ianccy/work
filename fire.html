@@ -45,22 +45,22 @@ $(function(){
         </p>\
       </li>';
       $('.content-list').append(work);
-
-      function initMap() {
-  var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 10,
-    center: {lat: item.緯度Lat, lng: item.經度Lng}
-  });
-
-  setMarkers(map);
-}
+      var xsite =  item.緯度Lat;
+      var ysite = item.經度Lng;
           } 
         });
       }
     });
   }));
 });
+  function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 10,
+    center: {lat:xsite , lng:ysite}
+  });
 
+  setMarkers(map);
+}
 // The following example creates complex markers to indicate beaches near
 // Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
 // to the base of the flagpole.
