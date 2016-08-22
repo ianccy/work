@@ -111,7 +111,6 @@ $(function(){
   </div>
     <div id="map">
     </div>
-    <div id="map"></div>
     <script>
 
 // The following example creates complex markers to indicate beaches near
@@ -121,12 +120,12 @@ $(function(){
 function initMap() {
   var map = new google.maps.Map(document.getElementById('map'), {
     zoom: 10,
-    center: {lat: xsite, lng: ysite}
+    center: {lat: -33.9, lng: 151.2}
   });
 
   setMarkers(map);
 }
-
+/*
 // Data for the markers consisting of a name, a LatLng and a zIndex for the
 // order in which these markers should display on top of each other.
 var beaches = [
