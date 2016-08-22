@@ -71,14 +71,9 @@ h2 {
     font-weight: 900;
 	margin: 20px 0;
 }
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-      }
-      #map {
-        height: 100%;
-      }
+#map {
+	width: 100%;
+}
 select {
 	width: 85%;
 	display: block;
