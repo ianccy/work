@@ -54,7 +54,65 @@ $(function(){
   }));
 });
 
+</script>
+<body>
 
+  <div class="container">
+    <div class="banner">
+      <h1 class="title">高雄違規照相查詢</h1>
+      <form>
+        <div class="form-style">
+          <div class="select-style">
+            <select name="abc" id="dist">
+              <option value="三民區">三民區</option>
+              <option value="小港區">小港區</option>
+              <option value="左營區">左營區</option>
+              <option value="前鎮區">前鎮區</option>
+              <option value="苓雅區">苓雅區</option>
+              <option value="前金區">前金區</option>
+              <option value="新興區">新興區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="鼓山區">鼓山區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="鹽埕區">鹽埕區</option>
+              <option value="鳳山區">鳳山區</option>
+              <option value="楠梓區">楠梓區</option>
+              <option value="大寮區">大寮區</option>
+              <option value="仁武區">仁武區</option>
+              <option value="林園區">林園區</option>
+              <option value="岡山區">岡山區</option>
+              <option value="路竹區">路竹區</option>
+              <option value="旗山區">旗山區</option>
+              <option value="橋頭區">橋頭區</option>
+              <option value="燕巢區">燕巢區</option>
+              <option value="美濃區">美濃區</option>
+              <option value="鳥松區">鳥松區</option>
+              <option value="湖內區">湖內區</option>
+              <option value="梓官區">梓官區</option>
+              <option value="永安區">永安區</option>
+              <option value="茄萣區">茄萣區</option>
+              <option value="彌陀區">彌陀區</option>
+              <option value="六龜區">六龜區</option>
+              <option value="大社區">大社區</option>
+            </select>
+          </div>
+            <!-- <input type="submit" value="搜尋" id="serch"> -->
+            <a href="#list" id="search" class="search-button" >搜尋</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="content" id="list">
+      <ul class="content-list">
+
+      </ul>
+    </div>
+
+    <div id="map">
+    </div>
+  </div>
+<script>
+  
 // The following example creates complex markers to indicate beaches near
 // Sydney, NSW, Australia. Note that the anchor is set to (0,32) to correspond
 // to the base of the flagpole.
@@ -114,65 +172,7 @@ function setMarkers(map) {
     });
   }
 }
-
-
 </script>
-<body>
-
-  <div class="container">
-    <div class="banner">
-      <h1 class="title">高雄違規照相查詢</h1>
-      <form>
-        <div class="form-style">
-          <div class="select-style">
-            <select name="abc" id="dist">
-              <option value="三民區">三民區</option>
-              <option value="小港區">小港區</option>
-              <option value="左營區">左營區</option>
-              <option value="前鎮區">前鎮區</option>
-              <option value="苓雅區">苓雅區</option>
-              <option value="前金區">前金區</option>
-              <option value="新興區">新興區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="鼓山區">鼓山區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="鹽埕區">鹽埕區</option>
-              <option value="鳳山區">鳳山區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="大寮區">大寮區</option>
-              <option value="仁武區">仁武區</option>
-              <option value="林園區">林園區</option>
-              <option value="岡山區">岡山區</option>
-              <option value="路竹區">路竹區</option>
-              <option value="旗山區">旗山區</option>
-              <option value="橋頭區">橋頭區</option>
-              <option value="燕巢區">燕巢區</option>
-              <option value="美濃區">美濃區</option>
-              <option value="鳥松區">鳥松區</option>
-              <option value="湖內區">湖內區</option>
-              <option value="梓官區">梓官區</option>
-              <option value="永安區">永安區</option>
-              <option value="茄萣區">茄萣區</option>
-              <option value="彌陀區">彌陀區</option>
-              <option value="六龜區">六龜區</option>
-              <option value="大社區">大社區</option>
-            </select>
-          </div>
-            <!-- <input type="submit" value="搜尋" id="serch"> -->
-            <a href="#list" id="search" class="search-button" >搜尋</a>
-        </div>
-      </form>
-    </div>
-
-    <div class="content" id="list">
-      <ul class="content-list">
-
-      </ul>
-    </div>
-
-    <div id="map">
-    </div>
-  </div>
 
 </body>
 
