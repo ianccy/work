@@ -71,7 +71,9 @@ h2 {
     font-weight: 900;
 	margin: 20px 0;
 }
-
+#map {
+	width: 100%;
+}
 select {
 	width: 85%;
 	display: block;
@@ -83,7 +85,7 @@ select {
 	border-radius: 49px;
 }
 .list-data {
-    background: rgba(255,255,255,0.6);
+    background: rgba(255, 255, 255, 0.84);
     width: 23%;
     float: left;
     margin: 5px calc(8%/8);
