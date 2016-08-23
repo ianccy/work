@@ -55,8 +55,8 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       }
     });
 
-  var coordinate = $('select option:selected').val().split(',');
-  map.setCenter(new google.maps.LatLng(coordinate[0], coordinate[1]));
+  var site = $('select option:selected').val().split(',');
+  map.setCenter(new google.maps.LatLng(site[0], site[1]));
   map.setZoom(14);
 
   }));
@@ -89,8 +89,8 @@ function initMap() {
               <option value="22.6270124,120.2896643">前金區</option>
               <option value="22.6284446,120.3031398">新興區</option>
               <option value="22.7256143,120.2803647">楠梓區</option>
-              <option value="鼓山區">鼓山區</option>
-              <option value="楠梓區">楠梓區</option>
+              <option value="22.6438922,120.2619399">鼓山區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
               <option value="鹽埕區">鹽埕區</option>
               <option value="鳳山區">鳳山區</option>
               <option value="楠梓區">楠梓區</option>
