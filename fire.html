@@ -67,7 +67,8 @@ var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 22.7025199, lng:120.4126757},
-    zoom: 11
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
   });
 }
 
