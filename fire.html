@@ -51,11 +51,11 @@ $(function(){
     });
   }));
 });
-      var site = $('#dist').val();
-      alert(site);
+var myCenter=new google.maps.LatLng($('#dist').val());
+      alert(myCenter);
       function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {site},
+    center: myCenter,
     zoom: 8
   });
 }
