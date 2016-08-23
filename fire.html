@@ -34,7 +34,7 @@ $(function(){
       $('.content-list').html('');
     var thisData = JSON.parse(data);
     $.each(thisData,function(i,item){
-      if($('#dist').val()==item['行政區']){
+      if($('#dist :selected').text()==item['行政區']){
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
         <p>拍照方向：'+item['測照方向']+'</p>\
@@ -45,17 +45,16 @@ $(function(){
         </p>\
       </li>';
       $('.content-list').append(work);
-      xsite =  item.緯度Lat;
-      ysite = item.經度Lng;
-      var map;
-function initMap() {
+          } 
+        });
+      var site = $('#dist').val();
+      alert(site);
+      function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: item.緯度Lat, lng: item.經度Lng},
+    center: {site},
     zoom: 8
   });
 }
-          } 
-        });
       }
     });
   }));
@@ -71,7 +70,7 @@ function initMap() {
         <div class="form-style">
           <div class="select-style">
             <select name="abc" id="dist">
-              <option value="三民區">三民區</option>
+              <option value="lat:22.6561285,lng:120.2809534">三民區</option>
               <option value="小港區">小港區</option>
               <option value="左營區">左營區</option>
               <option value="前鎮區">前鎮區</option>
