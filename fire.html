@@ -33,6 +33,15 @@ $(function(){
       $('.content').show();
       $('.content-list').html('');
     var thisData = JSON.parse(data);
+    
+    var myCenter=new google.maps.LatLng($('#dist').val());
+      alert(myCenter);
+      function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: myCenter,
+    zoom: 8
+  });
+}
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
         work = '<li class="list-data">\
@@ -49,16 +58,6 @@ $(function(){
         });
       }
     });
-var myCenter=new google.maps.LatLng($('#dist').val());
-      alert(myCenter);
-      function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: myCenter,
-    zoom: 8
-  });
-}
-
-
 
   }));
 });
