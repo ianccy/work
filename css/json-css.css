@@ -79,6 +79,12 @@ html, body {
       #map {
         height: 60%;
       }
+      .down {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+      }
 select {
 	width: 85%;
 	display: block;
