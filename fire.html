@@ -33,7 +33,6 @@ $(function(){
       $('.content').show();
       $('.content-list').html('');
     var thisData = JSON.parse(data);
-}
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
         work = '<li class="list-data">\
