@@ -33,14 +33,6 @@ $(function(){
       $('.content').show();
       $('.content-list').html('');
     var thisData = JSON.parse(data);
-
-var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
-}
 }
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
@@ -62,6 +54,13 @@ function initMap() {
   }));
 });
 
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+  });
+}
 </script>
 <body>
 
