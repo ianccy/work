@@ -69,7 +69,7 @@ h2 {
 .title {
 	text-align: center;
     font-weight: 900;
-	margin: 20px 0;
+	padding: 20px 0;
 }
 html, body {
         height: 100%;
@@ -78,9 +78,10 @@ html, body {
       }
       #map {
         height: 60%;
+        bottom:-275px; 
       }
       .down {
-      	
+
       }
 select {
 	width: 85%;
