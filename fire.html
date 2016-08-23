@@ -54,6 +54,11 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
         });
       }
     });
+$('#dist').change(function() {   
+  var coordinate = $('select option:selected').val().split(',');
+  map.setCenter(new google.maps.LatLng(coordinate[0], coordinate[1]));
+  map.setZoom(14);
+});
   }));
 });
 
@@ -65,11 +70,7 @@ function initMap() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
 }
-$('#dist').change(function() {   
-  var coordinate = $('select option:selected').val().split(',');
-  map.setCenter(new google.maps.LatLng(coordinate[0], coordinate[1]));
-  map.setZoom(14);
-});
+
 </script>
 <body>
 
