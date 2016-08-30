@@ -26,6 +26,12 @@
 $(function(){
   $('.content').hide();
   $('#search').bind('click',(function(){
+    $("#map").css("bottom", "0");
+    /*
+gMap = new google.maps.Map(document.getElementById('map')); 
+gMap.setZoom(13);      // This will trigger a zoom_changed on the map
+gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
+
   $.ajax({
     type:'GET',
     url:'https://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AF&CaseNo2=1&FileType=2&Lang=C&FolderType=O',
@@ -33,15 +39,6 @@ $(function(){
       $('.content').show();
       $('.content-list').html('');
     var thisData = JSON.parse(data);
-
-var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
-}
-}
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
         work = '<li class="list-data">\
@@ -54,13 +51,53 @@ function initMap() {
         </p>\
       </li>';
       $('.content-list').append(work);
+
+     var infowindow = new google.maps.InfoWindow();
+if(item['功能']=="闖紅燈"){
+  var image ={
+      url: 'https://ianpig.github.io/work/img/light.png',
+  }
+}
+else {
+  var image ={
+      url: 'https://ianpig.github.io/work/img/speed.png',
+  }
+}
+;
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
+        map: map,
+        icon:image
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(item["測  照  地  點"]);
+          infowindow.open(map, marker);
+          infowindow.close();
+        }
+      })(marker, i));
+
           } 
         });
       }
     });
 
+  var site = $('select option:selected').val().split(',');
+  map.setCenter(new google.maps.LatLng(site[0], site[1]));
+  map.setZoom(14);
+
   }));
 });
+
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 22.7025199, lng:120.4126757},
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
 
 </script>
 <body>
@@ -73,35 +110,35 @@ function initMap() {
           <div class="select-style">
             <select name="abc" id="dist">
               <option value="22.6561285,120.2809534">三民區</option>
-              <option value="小港區">小港區</option>
-              <option value="左營區">左營區</option>
-              <option value="前鎮區">前鎮區</option>
-              <option value="苓雅區">苓雅區</option>
-              <option value="前金區">前金區</option>
-              <option value="新興區">新興區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="鼓山區">鼓山區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="鹽埕區">鹽埕區</option>
-              <option value="鳳山區">鳳山區</option>
-              <option value="楠梓區">楠梓區</option>
-              <option value="大寮區">大寮區</option>
-              <option value="仁武區">仁武區</option>
-              <option value="林園區">林園區</option>
-              <option value="岡山區">岡山區</option>
-              <option value="路竹區">路竹區</option>
-              <option value="旗山區">旗山區</option>
-              <option value="橋頭區">橋頭區</option>
-              <option value="燕巢區">燕巢區</option>
-              <option value="美濃區">美濃區</option>
-              <option value="鳥松區">鳥松區</option>
-              <option value="湖內區">湖內區</option>
-              <option value="梓官區">梓官區</option>
-              <option value="永安區">永安區</option>
-              <option value="茄萣區">茄萣區</option>
-              <option value="彌陀區">彌陀區</option>
-              <option value="六龜區">六龜區</option>
-              <option value="大社區">大社區</option>
+              <option value="22.5473238,120.3136905">小港區</option>
+              <option value="22.6821686,120.2704699">左營區</option>
+              <option value="22.5898227,120.2931175">前鎮區</option>
+              <option value="22.6238913,120.3090362">苓雅區</option>
+              <option value="22.6270124,120.2896643">前金區</option>
+              <option value="22.6284446,120.3031398">新興區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.6438922,120.2619399">鼓山區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.625519,120.274977">鹽埕區</option>
+              <option value="22.6161129,120.3367075">鳳山區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.5914232,120.3727582">大寮區</option>
+              <option value="22.705591,120.3240565">仁武區</option>
+              <option value="22.5067776,120.3763684">林園區</option>
+              <option value="22.8040279,120.2657754">岡山區</option>
+              <option value="22.8593592,120.2252637">路竹區</option>
+              <option value="22.8764409,120.4022994">旗山區</option>
+              <option value="22.7530899,120.2828132">橋頭區</option>
+              <option value="22.7894019,120.3376364">燕巢區</option>
+              <option value="22.9059827,120.4917937">美濃區</option>
+              <option value="22.667205,120.3493313">鳥松區</option>
+              <option value="22.8947672,120.2068592">湖內區</option>
+              <option value="22.7444714,120.2419464">梓官區</option>
+              <option value="22.8251215,120.208995">永安區</option>
+              <option value="22.8841132,120.1806196">茄萣區</option>
+              <option value="22.7741693,120.2212836">彌陀區</option>
+              <option value="23.0025355,120.5988623">六龜區</option>
+              <option value="22.7378345,120.3554882">大社區</option>
             </select>
           </div>
             <!-- <input type="submit" value="搜尋" id="serch"> -->
@@ -117,8 +154,10 @@ function initMap() {
     </div>
 
   </div>
+
     <div id="map">
     </div>
+
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKHiwZTnzIDam9bK8vzk5mhu2rl8z48CQ&signed_in=true&callback=initMap"></script>
 
