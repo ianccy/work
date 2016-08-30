@@ -77,8 +77,9 @@ html, body {
         padding: 0;
       }
       #map {
-        height: 60%;
-        bottom:-275px; 
+        height: 100%;
+        float: left;
+        width: 65%;
       }
       .down {
 
@@ -95,9 +96,9 @@ select {
 }
 .list-data {
     background: rgba(255, 255, 255, 0.84);
-    width: 23%;
+    width: 48%;
     float: left;
-    margin: 5px calc(8%/8);
+    margin: 5px calc(4%/4);
     border-radius: 7px;
     padding: 15px 45px;
     box-sizing: border-box;
@@ -126,7 +127,10 @@ select {
 .content-list {
 	margin-bottom: 50px;
     overflow: hidden;
+    float: left;
+    width: 35%;
 }
+
 .search-button:hover {
 	background: #ffca69;
 }
