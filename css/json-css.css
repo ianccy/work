@@ -127,7 +127,6 @@ select {
     right: 0;
 }
 .content-list {
-    margin-bottom: 50px;
     overflow: auto;
     float: left;
     height: 810px;
