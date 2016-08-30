@@ -80,6 +80,8 @@ html, body {
         height: 100%;
         float: left;
         width: 65%;
+        position: fixed;
+        right: 0;
       }
       .down {
 
