@@ -77,8 +77,8 @@ html, body {
         padding: 0;
       }
       #map {
-        height: 100%;
-        float: left;
+        height: 810px;
+        float: right;
         width: 65%;
         position: fixed;
         right: 0;
@@ -127,9 +127,10 @@ select {
     right: 0;
 }
 .content-list {
-	margin-bottom: 50px;
-    overflow: hidden;
+    margin-bottom: 50px;
+    overflow: auto;
     float: left;
+    height: 810px;
     width: 35%;
 }
 
