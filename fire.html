@@ -57,7 +57,13 @@ if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
   }
-};
+}
+else {
+  var image ={
+      url: 'https://ianpig.github.io/work/img/speed.png',
+  }
+}
+;
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
