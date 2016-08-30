@@ -166,8 +166,11 @@ select {
     right: -50px;
 		}
 	.list-data {
-		width: 48%;
-		margin: 2px calc(4%/4);
+    width: 95%;
+    margin: 2px calc(5%/2);
+    line-height: 31px;
+    padding: 15px 20px;
+    height: 210px;
 	}
 	}
 
@@ -175,13 +178,26 @@ select {
 	.form-style {
 		width: 300px;
 	}
+	.content-list {
+    margin-bottom: 50px;
+    overflow: auto;
+    float: none;
+    height: 550px;
+    width: 100%;
+}
 	select {
 		width: 60%;
 	}
 	.search-button {
     right: -10px;
 		}
-	.list-data {
-		width: 88%;
-	}
+.list-data {
+    width: 48%;
+    margin: 2px calc(4%/4);
+}
+#map {
+    height: 810px;
+    float: none;
+    width: 100%;
+}
 	}
