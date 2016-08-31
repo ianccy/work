@@ -46,9 +46,14 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
         <p>拍照方向：'+item['測照方向']+'</p>\
         <p>偵測類型：'+item['功能']+'</p>\
         <p>設置區域：'+item['行政區']+'</p>\
-        <p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>\
+        if(item.緯度Lat==null){
+        	<p>無設置地點</p>\
+        };
+        else{
+        <p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>\ 
         地圖觀看</a>\
         </p>\
+    };
       </li>';
       $('.content-list').append(work);
   var infowindow = new google.maps.InfoWindow({
