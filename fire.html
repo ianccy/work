@@ -49,7 +49,7 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>'
       		
       $('.content-list').append(work);
-      		if(item.緯度Lat==0){
+      		if(item.緯度Lat==null){
       			$('.add').append('<p>無此地點位置</p>');
       		}
       		else {
