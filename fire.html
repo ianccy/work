@@ -74,9 +74,6 @@ else {
       });
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-        	      if (!infowindow) {
-          infowindow = new google.maps.InfoWindow();
-      }
           infowindow.open(map, marker);
         }
       })(marker, i));
