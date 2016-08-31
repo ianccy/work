@@ -42,10 +42,10 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
       	      		if(item.緯度Lat!=""){
-      			$('.add').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
+      			$('.content-list').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
       		}
       		else {
-      			$('.add').append('<p>無此地點位置</p>');
+      			$('.content-list').append('<p>無此地點位置</p>');
       		 };
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
