@@ -39,18 +39,23 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       $('.content-list').html('');
     var thisData = JSON.parse(data);
     $.each(thisData,function(i,item){
-      if($('#dist :selected').text()==item['行政區']){
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
         <p>拍照方向：'+item['測照方向']+'</p>\
         <p>偵測類型：'+item['功能']+'</p>\
-        <p>設置區域：'+item['行政區']+'</p>\
-        <p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>\
-        地圖觀看</a>\
-        </p>\
-      </li>';
-      $('.content-list').append(work);
-     var infowindow = new google.maps.InfoWindow();
+        <p>設置區域：'+item['行政區']+'</p>'
+      if($('#dist :selected').text()==item['行政區']){
+      	    if(item.緯度Lat!=""){
+      			add='<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p></li>';
+      		}
+      		else {
+      			add='<p>無此地點位置</p></li>';
+      		 };
+      $('.content-list').append(work+add);
+  var infowindow = new google.maps.InfoWindow({
+    content: item["測  照  地  點"],
+    maxWidth: 400
+  });
 if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
@@ -60,20 +65,22 @@ else {
   var image ={
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
-}
-;
+};
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
-        icon:image
+        icon:image,
+        title:item["測  照  地  點"]
       });
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          infowindow.setContent(item["測  照  地  點"]);
           infowindow.open(map, marker);
         }
       })(marker, i));
-          } 
+  google.maps.event.addListener(map, 'click', function() {
+    infowindow.close();
+  });
+          }
         });
       }
     });
