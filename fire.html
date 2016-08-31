@@ -52,6 +52,9 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>';
       $('.content-list').append(work);
 
+  var infowindow = new google.maps.InfoWindow({
+    content: item["測  照  地  點"]
+  });
 if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
@@ -78,9 +81,6 @@ else {
 var prev_infowindow =false; 
 
 base.attachInfo = function(marker, i){
-  var infowindow = new google.maps.InfoWindow({
-    content: item["測  照  地  點"]
-  });
 
     google.maps.event.addListener(marker, 'click', function(){
         if( prev_infowindow ) {
