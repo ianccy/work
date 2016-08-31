@@ -46,10 +46,8 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
         <p>拍照方向：'+item['測照方向']+'</p>\
         <p>偵測類型：'+item['功能']+'</p>\
         <p>設置區域：'+item['行政區']+'</p>\
-      </li>';
-       link = function(){
-      		if(item.緯度Lat==null){
-      			alert(123);
+      </li>'
+      		if(item.緯度Lat==0){
       			'<p>無此地點位置</p>'
       		}
       		else {
