@@ -71,13 +71,11 @@ else {
       });
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
-
+        return function() {
           infowindow.setContent(item["測  照  地  點"]);
           infowindow.open(map, marker);
         
-      })
-       infowindow.close(map, marker);
-      );
+      }));
 
           } 
         });
