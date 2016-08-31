@@ -62,20 +62,22 @@ else {
   var image ={
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
-}
-;
+};
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
         icon:image
+        content:item["測  照  地  點"]
       });
 
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.setContent(item["測  照  地  點"]);
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map,marker);
+  });
+
+  // Event that closes the Info Window with a click on the map
+  google.maps.event.addListener(map, 'click', function() {
+    infowindow.close();
+  });
 
 
           } 
