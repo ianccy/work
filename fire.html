@@ -66,7 +66,7 @@ else {
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
-        icon:image
+        icon:image,
         content:item["測  照  地  點"]
       });
 
@@ -99,7 +99,7 @@ function initMap() {
     zoom: 11,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   });
-}
+};
 
 </script>
 <body>
