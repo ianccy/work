@@ -49,12 +49,13 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>'
       		
       $('.content-list').append(work);
-      		if(item.緯度Lat==null){
-      			$('.add').append('<p>無此地點位置</p>');
+      		if(item.緯度Lat!=null){
+      			$('.add').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
       			alert(item.緯度Lat);
       		}
       		else {
-      			$('.add').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
+      			$('.add').append('<p>無此地點位置</p>');
+      			alert(item.緯度Lat);
       		 };
   var infowindow = new google.maps.InfoWindow({
     content: item["測  照  地  點"]
