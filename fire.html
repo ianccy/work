@@ -48,10 +48,10 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>'
       if($('#dist :selected').text()==item['行政區']){
       	      		if(item.緯度Lat!=""){
-      			$('.content-list').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
+      			$('.list-data').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
       		}
       		else {
-      			$('.content-list').append('<p>無此地點位置</p>');
+      			$('.list-data').append('<p>無此地點位置</p>');
       		 };
       $('.content-list').append(work);
   var infowindow = new google.maps.InfoWindow({
