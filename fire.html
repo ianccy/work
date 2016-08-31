@@ -72,13 +72,11 @@ else {
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
+          infoWindow.close();
           infowindow.setContent(item["測  照  地  點"]);
           infowindow.open(map, marker);
         }
-      })(marker, i));
-      google.maps.event.addListener(map, 'click', function() {
-        infoWindow.close();
-      });
+      }));
 
           } 
         });
