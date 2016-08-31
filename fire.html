@@ -52,23 +52,10 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       			add='<p>無此地點位置</p></li>';
       		 };
       $('.content-list').append(work+add);
-  var prev_infowindow =false; 
-
-base.attachInfo = function(marker, i){
-    infowindow = new google.maps.InfoWindow({
+  var infowindow = new google.maps.InfoWindow({
     content: item["測  照  地  點"],
     maxWidth: 400
-    });
-
-    google.maps.event.addListener(marker, 'click', function(){
-        if( prev_infowindow ) {
-           prev_infowindow.close();
-        }
-
-        prev_infowindow = infowindow;
-        infowindow.open(base.map, marker);
-    });
-}
+  });
 if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
