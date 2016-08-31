@@ -41,6 +41,12 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
     var thisData = JSON.parse(data);
     $.each(thisData,function(i,item){
       if($('#dist :selected').text()==item['行政區']){
+      	      		if(item.緯度Lat!=""){
+      			$('.add').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
+      		}
+      		else {
+      			$('.add').append('<p>無此地點位置</p>');
+      		 };
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
         <p>拍照方向：'+item['測照方向']+'</p>\
@@ -49,13 +55,6 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>'
       		
       $('.content-list').append(work);
-      		if(item.緯度Lat!=""){
-      			$('.add').append('<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>');
-      			alert(item.緯度Lat);
-      		}
-      		else {
-      			$('.add').append('<p>無此地點位置</p>');
-      		 };
   var infowindow = new google.maps.InfoWindow({
     content: item["測  照  地  點"]
   });
