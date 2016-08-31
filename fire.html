@@ -49,13 +49,14 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       </li>';
        link = function(){
       		if(item.緯度Lat==null){
+      			alert(123);
       			'<p>無此地點位置</p>'
       		}
       		else {
+      			alert(456);
       			'<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p>';
       		 }
-      		}
-
+      		};
       $('.content-list').append(work);
       $('.content-list').append(link);
   var infowindow = new google.maps.InfoWindow({
