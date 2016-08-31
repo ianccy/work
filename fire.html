@@ -76,7 +76,11 @@ else {
           infowindow.open(map, marker);
         }
       })(marker, i));
-
+      google.maps.event.addListener(marker, 'click', (function() {
+        return function() {
+          infowindow.close();
+        }
+      })(marker, i));
 
           } 
         });
