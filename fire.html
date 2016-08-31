@@ -81,7 +81,11 @@ else {
   google.maps.event.addListener(map, 'click', function() {
     infowindow.close();
   });
-  google.maps.Map.prototype.markers = new Array();
+          }
+        });
+      }
+    });
+google.maps.Map.prototype.markers = new Array();
 
 google.maps.Map.prototype.getMarkers = function() {
     return this.markers
@@ -102,10 +106,8 @@ google.maps.Marker.prototype.setMap = function(map) {
     }
     this._setMap(map);
 }
-          }
-        });
-      }
-    });
+
+  
   var site = $('select option:selected').val().split(',');
   map.setCenter(new google.maps.LatLng(site[0], site[1]));
   map.setZoom(14);
