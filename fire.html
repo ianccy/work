@@ -67,6 +67,13 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 22.7025199, lng:120.4126757},
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
        var marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
@@ -92,13 +99,6 @@ else {
   }));
 });
 var map;
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 22.7025199, lng:120.4126757},
-    zoom: 11,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-}
 </script>
 <body>
 
