@@ -72,9 +72,11 @@ else {
         icon:image,
         title:item["測  照  地  點"]
       });
-                google.maps.event.addListener(marker, 'click', function() {
-                    infowindow.open(map,marker);
-                });
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
   google.maps.event.addListener(map, 'click', function() {
     infowindow.close();
   });
@@ -153,9 +155,6 @@ function initMap() {
 
     <div id="map">
     </div>
-
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKHiwZTnzIDam9bK8vzk5mhu2rl8z48CQ&signed_in=true&callback=initMap"></script>
 
 </body>
 
