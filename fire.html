@@ -66,7 +66,7 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-if(marker!=null)  marker.remove();
+if(marker!=null)  setMapOnAll(null);
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
