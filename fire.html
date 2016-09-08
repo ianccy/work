@@ -39,7 +39,6 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       $('.content-list').html('');
     var thisData = JSON.parse(data);
     $.each(thisData,function(i,item){
-      setMapOnAll(null);
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
         <p>拍照方向：'+item['測照方向']+'</p>\
@@ -67,13 +66,7 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 22.7025199, lng:120.4126757},
-    zoom: 11,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-}
+setMapOnAll(null);
        var marker = new google.maps.Marker({
         position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
         map: map,
@@ -99,6 +92,13 @@ function initMap() {
   }));
 });
 var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 22.7025199, lng:120.4126757},
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
 </script>
 <body>
 
