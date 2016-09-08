@@ -74,7 +74,7 @@ else {
       });
       google.maps.event.addListener(marker, 'click', (function() {
            infowindow.setContent(item["測  照  地  點"]);
-          infowindow.open(map, marker);
+          infowindow.open(map, this);
         }
       })(marker, i));
   google.maps.event.addListener(map, 'click', function() {
