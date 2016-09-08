@@ -53,6 +53,8 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       		 };
       $('.content-list').append(work+add);
   var infowindow = new google.maps.InfoWindow({
+    content: item["測  照  地  點"],
+    maxWidth: 400
   });
 if(item['功能']=="闖紅燈"){
   var image ={
@@ -70,12 +72,8 @@ else {
         icon:image,
         title:item["測  照  地  點"]
       });
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.close();
-          infowindow = new google.maps.InfoWindow({
-    content: item["測  照  地  點"],
-    maxWidth: 400});
+      google.maps.event.addListener(marker, 'click', (function() {
+           infowindow.setContent(item["測  照  地  點"]);
           infowindow.open(map, marker);
         }
       })(marker, i));
