@@ -73,9 +73,8 @@ else {
         title:item["測  照  地  點"]
       });
                 google.maps.event.addListener(marker, 'click', function(i,item) {
-                  return function() {
                     infowindow.open(map,marker);
-                }});
+                });
 
 
 
