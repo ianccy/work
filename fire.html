@@ -75,12 +75,8 @@ else {
       var infowindow;
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          if(infowindow && infowindow.open){
-            alert(1);
-infowindow.close();
-          }
-infowindow.open(map, marker);
-          alert(2);
+                infoWindow.setContent(infoWindowContent[i][0]);
+                infoWindow.open(map, marker);
         }
       })(marker, i));
   google.maps.event.addListener(map, 'click', function() {
