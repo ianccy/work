@@ -74,12 +74,11 @@ else {
       });
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-        	var mapopen;
-        	if(mapopen){
+        	if(infowindow){
         		alert(1);
         		infowindow.close();
         	}
-          mapopen = infowindow.open(map, marker);
+          infowindow.open(map, marker);
           alert(2);
         }
       })(marker, i));
