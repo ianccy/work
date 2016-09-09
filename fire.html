@@ -76,7 +76,7 @@ else {
         return function() {
         	var mapopen;
         	if(mapopen && mapopen.open){
-        		mapopen=infowindow.close();
+        		infowindow.close();
         		alert(1);
         	}
           mapopen = infowindow.open(map, marker);
