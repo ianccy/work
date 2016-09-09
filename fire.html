@@ -72,14 +72,14 @@ else {
         icon:image,
         title:item["測  照  地  點"]
       });
+      var infowindow;
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          var info;
-          if(info && info.open){
+          if(infowindow && infowindow.open){
             alert(1);
-info =infowindow.close();
+infowindow.close();
           }
-info = infowindow.open(map, marker);
+infowindow.open(map, marker);
           alert(2);
         }
       })(marker, i));
