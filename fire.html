@@ -77,9 +77,9 @@ else {
           var info;
           if(info && infowindow.open){
             alert(1);
-marker.infowindow.close();
+infowindow.close();
           }
-marker.infowindow.open(map, marker);
+infowindow.open(map, marker);
           alert(2);
         }
       })(marker, i));
