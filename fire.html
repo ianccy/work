@@ -74,6 +74,7 @@ else {
       });
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
+        	var mapopen;
         	if(mapopen&&mapopen.open){
         		mapopen=infowindow.close();
         	}
