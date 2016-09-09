@@ -75,7 +75,7 @@ else {
       var infowindow;
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          if(infowindow && infowindow.open){
+          if(infowindow){
             alert(1);
 infowindow.close();
           }
