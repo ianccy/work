@@ -53,10 +53,10 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       		 };
       $('.content-list').append(work+add);
   var infowindow = new google.maps.InfoWindow({
-    content: item["測  照  地  點"],
+    content: item.測  照  地  點,
     maxWidth: 400
   });
-if(item['功能']=="闖紅燈"){
+if(item.功能=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
   }
@@ -79,11 +79,11 @@ else {
                 var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
-                    title: data.["測  照  地  點"]
+                    title: data.測  照  地  點
                 });
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
-                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.["測  照  地  點"] + "</div>");
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.測  照  地  點 + "</div>");
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
