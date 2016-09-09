@@ -75,11 +75,11 @@ else {
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
           var info;
-          if(info && infowindow.open){
+          if(info && info.open){
             alert(1);
-infowindow.close();
+info =infowindow.close();
           }
-infowindow.open(map, marker);
+info = infowindow.open(map, marker);
           alert(2);
         }
       })(marker, i));
