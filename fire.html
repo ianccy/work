@@ -74,9 +74,10 @@ else {
       });
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
-          if(infowindow){
+          if(infowindow && infowindow.open){
             setMapOnAll(null);
           }
+          setMapOnAll(map);
           infowindow.open(map, marker);
         }
       })(marker, i));
