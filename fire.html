@@ -53,8 +53,10 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       		 };
       $('.content-list').append(work+add);
   var infowindow = new google.maps.InfoWindow({
+    content: item["測  照  地  點"],
+    maxWidth: 400
   });
-if(item.功能=="闖紅燈"){
+if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
   }
@@ -64,51 +66,37 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
+        map: map,
+        icon:image,
+        title:item["測  照  地  點"]
+      });
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
   google.maps.event.addListener(map, 'click', function() {
     infowindow.close();
   });
-
+          }
+        });
       }
     });
-        window.onload = function () {
-            LoadMap();
-        }
-        function LoadMap() {
-            var mapOptions = {
-                center: {lat: 22.7025199, lng:120.4126757},
-                zoom: 8,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var infoWindow = new google.maps.InfoWindow();
-            var latlngbounds = new google.maps.LatLngBounds();
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-
-            for (var i = 0; i < markers.length; i++) {
-                var data = markers[i]
-                var myLatlng = new google.maps.LatLng(item.緯度Lat, item.經度Lng);
-                var marker = new google.maps.Marker({
-                    position: myLatlng,
-                    map: map,
-                    title: data["測  照  地  點"]
-                });
-                (function (marker, data) {
-                    google.maps.event.addListener(marker, "click", function (e) {
-                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data["測  照  地  點"] + "</div>");
-                        infoWindow.open(map, marker);
-                    });
-                })(marker, data);
-                latlngbounds.extend(marker.position);
-            }
-            var bounds = new google.maps.LatLngBounds();
-            map.setCenter(latlngbounds.getCenter());
-            map.fitBounds(latlngbounds);
-
   var site = $('select option:selected').val().split(',');
   map.setCenter(new google.maps.LatLng(site[0], site[1]));
   map.setZoom(14);
-
+  }));
+});
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 22.7025199, lng:120.4126757},
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
 </script>
 <body>
 
