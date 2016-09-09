@@ -66,29 +66,35 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
-        map: map,
-        icon:image,
-        title:item["測  照  地  點"]
-      });
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-        	if(infowindow){
-        		alert(1);
-        		infowindow.close();
-        	}
-          infowindow.open(map, marker);
-          alert(2);
-        }
-      })(marker, i));
+
   google.maps.event.addListener(map, 'click', function() {
     infowindow.close();
   });
-          }
-        });
+
       }
     });
+            for (var i = 0; i < markers.length; i++) {
+                var data = markers[i]
+                var myLatlng = new google.maps.LatLng(item.緯度Lat, item.經度Lng);
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: data.["測  照  地  點"]
+                });
+                (function (marker, data) {
+                    google.maps.event.addListener(marker, "click", function (e) {
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.["測  照  地  點"] + "</div>");
+                        infoWindow.open(map, marker);
+                    });
+                })(marker, data);
+                latlngbounds.extend(marker.position);
+            }
+            var bounds = new google.maps.LatLngBounds();
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
+
+
+
   var site = $('select option:selected').val().split(',');
   map.setCenter(new google.maps.LatLng(site[0], site[1]));
   map.setZoom(14);
