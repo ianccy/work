@@ -77,11 +77,11 @@ else {
                 var marker = new google.maps.Marker({
                     position: myLatlng,
                     map: map,
-                    title: data.["測  照  地  點"]
+                    title: data["測  照  地  點"]
                 });
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
-                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data.測  照  地  點 + "</div>");
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data["測  照  地  點"] + "</div>");
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
