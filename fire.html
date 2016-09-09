@@ -72,7 +72,7 @@ else {
         icon:image,
         title:item["測  照  地  點"]
       });
-      var infowindow;
+ 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
                 infoWindow.setContent(infoWindowContent[i][0]);
