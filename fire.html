@@ -61,8 +61,7 @@ else {
 };
 
            var infoWindow = new google.maps.InfoWindow();
-
-            for (var i = 0; i < item.length; i++) {
+alert(item[i]);
                 var data = item[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
                 var marker = new google.maps.Marker({
@@ -80,7 +79,6 @@ else {
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
-            }
 
           }
         });
