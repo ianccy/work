@@ -69,7 +69,7 @@ else {
                     icon:image
                 });
 
-google.maps.event.addListener(someMarker, 'click', function() {
+google.maps.event.addListener(marker, 'click', function() {
    infoWindow.setContent('Hello World');
    infoWindow.open(map, this);
 });
