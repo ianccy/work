@@ -27,10 +27,6 @@ $(function(){
   $('.content').hide();
   $('#search').bind('click',(function(){
     $("#map").css("bottom", "0");
-    /*
-gMap = new google.maps.Map(document.getElementById('map')); 
-gMap.setZoom(13);      // This will trigger a zoom_changed on the map
-gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
   $.ajax({
     type:'GET',
     url:'https://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AF&CaseNo2=1&FileType=2&Lang=C&FolderType=O',
@@ -63,6 +59,13 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
+            var mapOptions = {
+                center: new google.maps.LatLng(markers[0].緯度Lat, markers[0].經度Lng),
+                zoom: 10,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
   var infoWindow = new google.maps.InfoWindow();
 
                 var data = thisData[i];
