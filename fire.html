@@ -59,13 +59,6 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-            var mapOptions = {
-                center: new google.maps.LatLng(markers[0].緯度Lat, markers[0].經度Lng),
-                zoom: 10,
-                mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
   var infoWindow = new google.maps.InfoWindow();
 
                 var data = thisData[i];
@@ -80,8 +73,8 @@ else {
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
                         //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
-                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data["測  照  地  點"] + "</div>");
-                        infoWindow.open(map, marker);
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + this["測  照  地  點"] + "</div>");
+                        infoWindow.open(map, this);
                     });
                 })(marker, data);
 
