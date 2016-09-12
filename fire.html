@@ -52,10 +52,7 @@ gMap.setCenter(new google.maps.LatLng($('#dist').val()));*/
       			add='<p>無此地點位置</p></li>';
       		 };
       $('.content-list').append(work+add);
-  var infowindow = new google.maps.InfoWindow({
-    content: item["測  照  地  點"],
-    maxWidth: 400
-  });
+
 if(item['功能']=="闖紅燈"){
   var image ={
       url: 'https://ianpig.github.io/work/img/light.png',
@@ -66,17 +63,25 @@ else {
       url: 'https://ianpig.github.io/work/img/speed.png',
   }
 };
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(item.緯度Lat, item.經度Lng),
-        map: map,
-        icon:image,
-        title:item["測  照  地  點"]
-      });
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-        return function() {
-          infowindow.open(map, marker);
-        }
-      })(marker, i));
+  var infoWindow = new google.maps.InfoWindow();
+
+                var data = markers[i];
+                var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    title: data["測  照  地  點"],
+                    icon:image
+                });
+
+                (function (marker, data) {
+                    google.maps.event.addListener(marker, "click", function (e) {
+                        //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data["測  照  地  點"] + "</div>");
+                        infoWindow.open(map, marker);
+                    });
+                })(marker, data);
+                
   google.maps.event.addListener(map, 'click', function() {
     infowindow.close();
   });
