@@ -67,6 +67,7 @@ else {
 
   
     /*marker info*/
+
     for (var i = 0; i < thisData.length; i++) {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
@@ -90,6 +91,7 @@ else {
                 })(marker, data);
             }
 }
+markers[i].setMap(null);
 markers[i].setMap(map);
       }
     });
