@@ -90,8 +90,9 @@ else {
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
+                marker.setMap(null);
+                marker.setMap(map);
             }
-            alert(marker.title);
             
 }
 
