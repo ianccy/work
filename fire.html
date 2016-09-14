@@ -79,7 +79,7 @@ else {
                     map: map,
                     title: data["測  照  地  點"]
                 });
-      markers[i].setMap(map);
+  
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
@@ -89,6 +89,7 @@ else {
                     });
                 })(marker, data);
             }
+                markers[i].setMap(map);
 }
       }
     });
