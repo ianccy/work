@@ -71,6 +71,7 @@ else {
     for (var i = 0; i < thisData.length; i++) {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
+      marker[i].setMap(null);
            var infoWindow = new google.maps.InfoWindow();
                 var data = thisData[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
@@ -80,7 +81,7 @@ else {
                     map: map,
                     title: data["測  照  地  點"]
                 });
-  
+marker[i].setMap(map);
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
@@ -89,9 +90,8 @@ else {
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
+
             }
-marker[i].setMap(null);
-marker[i].setMap(map);
 }
 
       }
