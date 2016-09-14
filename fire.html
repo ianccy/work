@@ -67,7 +67,7 @@ else {
 
   
     /*marker info*/
-alert(marker);
+
     for (var i = 0; i < thisData.length; i++) {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
@@ -75,7 +75,7 @@ alert(marker);
            var infoWindow = new google.maps.InfoWindow();
                 var data = thisData[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
-                 marker = new google.maps.Marker({
+                var marker = new google.maps.Marker({
                     position: myLatlng,
                     icon:image,
                     map: map,
@@ -92,6 +92,7 @@ alert(marker);
                 })(marker, data);
 
             }
+            alert(marker);
 }
 
       }
