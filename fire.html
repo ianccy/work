@@ -72,9 +72,9 @@ else {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
       if (marker && marker.setMap) {
-    marker.setMap(null);
+    marker[i].setMap(null);
 }
-marker.setMap(map);
+marker[i].setMap(map);
            var infoWindow = new google.maps.InfoWindow();
                 var data = thisData[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
