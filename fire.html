@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-hant">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv ="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=2.0, user-scalable=1" />
+<link rel="shortcut icon" href="">
+<title></title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="" />
+<meta itemprop="name" content="">
+<meta name="description" content="">
+<meta name="robots" content="noindex">
+<meta property="og:description" content="" />
+<meta itemprop="description" content="">
+<meta property="og:image" content="" />
+<meta itemprop="image" content="" />
+<meta property="og:url" content="" />
+<meta itemprop="url" content="">
+<link rel="stylesheet" href="css/json-css.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBKHiwZTnzIDam9bK8vzk5mhu2rl8z48CQ&signed_in=true&callback=initMap"></script>
+</head>
+<script type="text/javascript">
+$(function(){
+  $('.content').hide();
+  $('#search').bind('click',(function(){
+    $("#map").css("bottom", "0");
+        /*json 引入*/
+  $.ajax({
+    type:'GET',
+    url:'https://data.kaohsiung.gov.tw/Opendata/DownLoad.aspx?Type=2&CaseNo1=AF&CaseNo2=1&FileType=2&Lang=C&FolderType=O',
+    success:function(data){
+      $('.content').show();
+      $('.content-list').html('');
+    var thisData = JSON.parse(data);
+    /*每筆資料切割item*/
+    $.each(thisData,function(i,item){
+        work = '<li class="list-data">\
+        <h2>'+item["測  照  地  點"]+'</h2>\
+        <p>拍照方向：'+item['測照方向']+'</p>\
+        <p>偵測類型：'+item['功能']+'</p>\
+        <p>設置區域：'+item['行政區']+'</p>'
+      if($('#dist :selected').text()==item['行政區']){
+      	    if(item.緯度Lat!=""){
+      			add='<p>設置地點： <a href="https://www.google.com.tw/maps/place/'+item.緯度Lat+','+item.經度Lng+'" target=_blank>地圖觀看</a></p></li>';
+      		}
+      		else {
+      			add='<p>無此地點位置</p></li>';
+      		 };
+      $('.content-list').append(work+add);
+
+if(item['功能']=="闖紅燈"){
+   image ={
+      url: 'https://ianpig.github.io/work/img/light.png',
+  }
+}
+else {
+   image ={
+      url: 'https://ianpig.github.io/work/img/speed.png',
+  }
+};
+
+          }
+        });
+
+    for (var i = 0; i < thisData.length; i++) {
+
+    if($('#dist :selected').text()==thisData[i]['行政區']){
+    var marker;
+	if(marker){
+	   marker.setMap(null);
+	}
+           var infoWindow = new google.maps.InfoWindow();
+                var data = thisData[i];
+                var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
+                var marker = new google.maps.Marker({
+                    position: myLatlng,
+                    icon:image,
+                    map: map,
+                    title: data["測  照  地  點"]
+                });
+
+                //Attach click event to the marker.
+                (function (marker, data) {
+                    google.maps.event.addListener(marker, "click", function (e) {
+                        //Wrap the content inside an HTML DIV in order to set height and width of InfoWindow.
+                        infoWindow.setContent("<div style = 'width:200px;min-height:40px'>" + data["測  照  地  點"] + "</div>");
+                        infoWindow.open(map, marker);
+                    });
+                })(marker, data);
+            }
+            
+}
+
+      }
+    });
+  var site = $('select option:selected').val().split(',');
+  map.setCenter(new google.maps.LatLng(site[0], site[1]));
+  map.setZoom(14);
+  }));
+});
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 22.7025199, lng:120.4126757},
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  });
+}
+</script>
+<body>
+
+  <div class="container">
+    <div class="banner">
+      <h1 class="title">高雄違規照相查詢</h1>
+      <form>
+        <div class="form-style">
+          <div class="select-style">
+            <select name="abc" id="dist">
+              <option value="22.6561285,120.2809534">三民區</option>
+              <option value="22.5473238,120.3136905">小港區</option>
+              <option value="22.6821686,120.2704699">左營區</option>
+              <option value="22.5898227,120.2931175">前鎮區</option>
+              <option value="22.6238913,120.3090362">苓雅區</option>
+              <option value="22.6270124,120.2896643">前金區</option>
+              <option value="22.6284446,120.3031398">新興區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.6438922,120.2619399">鼓山區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.625519,120.274977">鹽埕區</option>
+              <option value="22.6161129,120.3367075">鳳山區</option>
+              <option value="22.7256143,120.2803647">楠梓區</option>
+              <option value="22.5914232,120.3727582">大寮區</option>
+              <option value="22.705591,120.3240565">仁武區</option>
+              <option value="22.5067776,120.3763684">林園區</option>
+              <option value="22.8040279,120.2657754">岡山區</option>
+              <option value="22.8593592,120.2252637">路竹區</option>
+              <option value="22.8764409,120.4022994">旗山區</option>
+              <option value="22.7530899,120.2828132">橋頭區</option>
+              <option value="22.7894019,120.3376364">燕巢區</option>
+              <option value="22.9059827,120.4917937">美濃區</option>
+              <option value="22.667205,120.3493313">鳥松區</option>
+              <option value="22.8947672,120.2068592">湖內區</option>
+              <option value="22.7444714,120.2419464">梓官區</option>
+              <option value="22.8251215,120.208995">永安區</option>
+              <option value="22.8841132,120.1806196">茄萣區</option>
+              <option value="22.7741693,120.2212836">彌陀區</option>
+              <option value="23.0025355,120.5988623">六龜區</option>
+              <option value="22.7378345,120.3554882">大社區</option>
+            </select>
+          </div>
+            <!-- <input type="submit" value="搜尋" id="serch"> -->
+            <a href="#list" id="search" class="search-button" >搜尋</a>
+        </div>
+      </form>
+    </div>
+
+    <div class="content" id="list">
+      <ul class="content-list">
+
+      </ul>
+    </div>
+
+  </div>
+
+    <div id="map">
+    </div>
+
+</body>
+
+</html>
