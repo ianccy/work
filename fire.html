@@ -66,9 +66,7 @@ else {
         });
   function clean() {
     if (marker && marker.length) {
-      marker.forEach(function(m) {
-        m.setMap(null);
-      });
+        marker.setMap(null);
     }
     marker = [];
   }
