@@ -53,6 +53,8 @@ $(function(){
 
           }
         });
+var map;
+var markers = [];
 markers.setMap(null);
     for (var i = 0; i < thisData.length; i++) {
 
@@ -67,8 +69,7 @@ markers.setMap(null);
 		      url: 'https://ianpig.github.io/work/img/speed.png',
 		  }
 		};
-	var map;
-	var markers = [];
+
            var infoWindow = new google.maps.InfoWindow();
                 var data = thisData[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
