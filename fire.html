@@ -80,6 +80,7 @@ DeleteMarkers();
                     title: data["測  照  地  點"]
                 });
 				markers.push(marker);
+				markers.setMap(map);
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
@@ -92,7 +93,7 @@ DeleteMarkers();
             }
             
 }
-markers.setMap(map);
+
     function DeleteMarkers() {   
         //Loop through all the markers and remove   
         for (var i = 0; i < markers.length; i++) {   
@@ -101,7 +102,14 @@ markers.setMap(map);
         }   
         markers = [];
     };  
-
+    function CreateMarkers() {   
+        //Loop through all the markers and remove   
+        for (var i = 0; i < markers.length; i++) {   
+            markers[i].setMap(null);
+            alert(123);
+        }   
+        markers = [];
+    };
 
 
       }
