@@ -50,25 +50,28 @@ $(function(){
       			add='<p>無此地點位置</p></li>';
       		 };
       $('.content-list').append(work+add);
+
+if(item['功能']=="闖紅燈"){
+   image ={
+      url: 'https://ianpig.github.io/work/img/light.png',
+  }
+}
+else {
+   image ={
+      url: 'https://ianpig.github.io/work/img/speed.png',
+  }
+};
+
           }
         });
-    var marker;
-	if(marker!==null){
-	   alert(123)
-	}
-	
+
     for (var i = 0; i < thisData.length; i++) {
+
     if($('#dist :selected').text()==thisData[i]['行政區']){
-	if(thisData[i]['功能']=="闖紅燈"){
-	    image ={
-	      url: 'https://ianpig.github.io/work/img/light.png',
-	  }
-	else {
-	    image ={
-	      url: 'https://ianpig.github.io/work/img/speed.png',
-	  }
+    var marker;
+	if(marker){
+	   marker.setMap(null);
 	}
-}
            var infoWindow = new google.maps.InfoWindow();
                 var data = thisData[i];
                 var myLatlng = new google.maps.LatLng(data.緯度Lat, data.經度Lng);
@@ -78,6 +81,7 @@ $(function(){
                     map: map,
                     title: data["測  照  地  點"]
                 });
+
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
@@ -89,6 +93,7 @@ $(function(){
             }
             
 }
+
       }
     });
   var site = $('select option:selected').val().split(',');
