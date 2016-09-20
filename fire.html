@@ -97,17 +97,13 @@ DeleteMarkers();
 }
 
     function DeleteMarkers() {
-    	if(markers!==null){
         //Loop through all the markers and remove   
         for (var i = 0; i < markers.length; i++) {   
             markers[i].setMap(null);
             alert("刪除資料");
         }   
         markers = [];
-    }
-    else{
-    	alert("沒跑刪除");
-    }
+ 
     };  
     function CreateMarkers() {   
         //Loop through all the markers and remove   
