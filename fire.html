@@ -53,9 +53,10 @@ $(function(){
 
           }
         });
-var map;
-var markers = [];
-markers.setMap(null);
+if(marker&&marker==null){
+marker.setMap(null);
+alert(123);
+}
     for (var i = 0; i < thisData.length; i++) {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
@@ -79,8 +80,8 @@ markers.setMap(null);
                     map: map,
                     title: data["測  照  地  點"]
                 });
-                markers.push(marker);
-                markers.setMap(map);
+                marker.push(marker);
+                marker.setMap(map);
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
