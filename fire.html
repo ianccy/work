@@ -53,10 +53,7 @@ $(function(){
 
           }
         });
-if(marker!==null){
-alert(123);
-marker.setMap(null);
-}
+
     for (var i = 0; i < thisData.length; i++) {
 
     if($('#dist :selected').text()==thisData[i]['行政區']){
@@ -80,7 +77,7 @@ marker.setMap(null);
                     map: map,
                     title: data["測  照  地  點"]
                 });
-                marker.setMap(map);
+
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
@@ -89,9 +86,14 @@ marker.setMap(null);
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
+                if(marker!==null){
+				marker.setMap(null);
+				alert(123);
+				}
             }
             
 }
+
 
       }
     });
