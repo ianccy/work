@@ -53,7 +53,8 @@ $(function(){
 
           }
         });
-
+var markers = [];   
+DeleteMarkers()
     for (var i = 0; i < thisData.length; i++) {
     	
     if($('#dist :selected').text()==thisData[i]['行政區']){
@@ -90,7 +91,14 @@ $(function(){
             }
             
 }
-
+    function DeleteMarkers() {   
+        //Loop through all the markers and remove   
+        for (var i = 0; i < markers.length; i++) {   
+            markers[i].setMap(null);
+            alert(markers.title);
+        }   
+        markers = [];   
+    };  
 
 
 
