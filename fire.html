@@ -95,6 +95,7 @@ DeleteMarkers();
 }
 
     function DeleteMarkers() {
+    	if(markers!=='undefined'){
         //Loop through all the markers and remove   
         for (var i = 0; i < markers.length; i++) {   
             markers[i].setMap(null);
@@ -104,6 +105,8 @@ DeleteMarkers();
         markers = [];
  		alert("刪除markers資料");
  		console.log("執行setMap null")
+
+ 	}
     };  
     function CreateMarkers() {   
         //Loop through all the markers and remove   
