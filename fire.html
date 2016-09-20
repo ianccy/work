@@ -81,7 +81,7 @@ DeleteMarkers();
                 });
 				markers.push(marker);
 				markers.setMap(map);
-				alert(markers);
+				alert(markers.title);
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
