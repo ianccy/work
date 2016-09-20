@@ -77,12 +77,12 @@ $(function(){
                     map: map,
                     title: data["測  照  地  點"]
                 });
-               if(marker!=='null'){
+
 				marker.setMap(null);
 				alert(123);
 				marker.setMap(map);
 				alert(321);
-				}
+	
 
                 //Attach click event to the marker.
                 (function (marker, data) {
