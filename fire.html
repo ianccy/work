@@ -80,6 +80,7 @@ DeleteMarkers();
                     title: data["測  照  地  點"]
                 });
 				markers.push(marker);
+				alert(markers);
                 //Attach click event to the marker.
                 (function (marker, data) {
                     google.maps.event.addListener(marker, "click", function (e) {
