@@ -79,10 +79,14 @@ $(function(){
                 });
 
 				marker.setMap(null);
+				if(marker.setMap()==null){
 				alert(123);
+		}
+		marker.setMap(map);
+		if(marker.setMap()!==null){
 				marker.setMap(map);
 				alert(321);
-	
+	}
 
                 //Attach click event to the marker.
                 (function (marker, data) {
