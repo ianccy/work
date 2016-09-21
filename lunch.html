@@ -17,12 +17,12 @@ button:hover {
 <script>
 var myArray = ['subway','城中美食','頂呱呱','肯德基','華南便當','台生古早味','四海遊龍','八方雲集','麥當勞','三商巧福','sukiya','阿姨炒手','羊城','小雞飯'
 ,'十三川','十三川隔壁牛肉麵','雲客來','巷仔口義大利麵','延平南路水餃','燒臘飯','早餐店(隨便)','三代滷肉飯','田園牛肉麵','吉野家']; 
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}
 function myFunction() {
-    var go =myArray[Math.floor((Math.random()*100)/4)];
-    if(myArray[23]){
-        myFunction();
-    }
-        document.getElementById("demo").innerHTML=go;
+    var go =myArray[getRandomArbitrary(0, 22)];
+    document.getElementById("demo").innerHTML=go;
 }
 </script>
 
