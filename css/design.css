@@ -46,6 +46,10 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+img{
+    max-width:100%;
+    height:auto
+}
 /*清除css*/
 html, body {
         position: relative;
@@ -136,34 +140,34 @@ a:hover {
 .ps-thing {
 	position: relative;
 }
-.left-bar {
+.setting-bar {
 	width: 50%;
     float: left;
 }
-.user-left {
+.setting-item {
     display: inline-block;
     margin: 0 15px;
     color:#8f8f8f;
 }
-.user-left a {
+.setting-item a {
 	color:#96b624;
 	margin-left: 5px;
 }
 
-.user-right {
+.account-bar {
 	position: absolute;
     right: 0;
     color:#a5a5a5;
 }
-.user-right a {
+.account-bar a {
 	color:#a5a5a5;
 }
-.user-right li {
+.account-bar li {
 	display: inline-block;
 	margin: 0px 10px;
 	position: relative;
 }
-.user-right-list::after {
+.account-item::after {
 	content: "";
 	background: #e0e0e0;
 	height: 100%;
@@ -219,12 +223,16 @@ a:hover {
 }
 
 .logo 	{
-	width: 35%;
 	float:left;
 }
 .logo a {
+    background-repeat: no-repeat;
+    background-position: 0% 50%;
 	display: block;
+    background-image: url(../img/logo.png);
     padding: 35px 0;
+    text-indent: -119988px;
+    width: 350px;
 }
 .logo img {
 	max-width: 100%;
@@ -232,8 +240,7 @@ a:hover {
 .social {
     position: absolute;
     right: 0;
-    bottom: 10px;
-    padding: 40px 0px;
+    bottom: 15px;
 }
 .top-index {
 	z-index: 9000;
@@ -339,9 +346,10 @@ a:hover {
     padding: 0px 2px;
     font-size: 12px;
 }
-h2 {
+.small-title {
 	font-size: 26px;
 	padding: 15px 10px;
+    width: 500px;
 }
 .banner {
 	padding: 30px 0;
@@ -581,7 +589,7 @@ footer h3 {
 	.social-list img {
         max-width: 35px;
 }
-.banner-main h2 {
+.banner-main .small-title {
     width: 80%;
 }
   .product {
@@ -651,7 +659,7 @@ footer h3 {
 .buy {
     bottom: 550px;
     }
-.user-right li {
+.account-bar li {
     margin: 0px 3px;
 }
 .navbar::before {
@@ -682,7 +690,7 @@ background: #838383;
     margin: 0 auto;
     margin-top: 3px;
 }
-.user-right {
+.account-bar {
     top: 115px;
     left: 15px;
 }
@@ -705,8 +713,15 @@ background: #838383;
     position: relative;
     top: -45px;
 }
-.mobile-logo img {
-    max-height: 100%;
+.mobile-logo a {
+    background-repeat: no-repeat;
+    background-position: 0% 75%;
+    display: block;
+    background-image: url(../img/logo.png);
+    padding: 18px 0;
+    text-indent: -119988px;
+    width: 155px;
+    background-size: 100%;
 }
 .mobile-nav {
     display: block;
@@ -722,7 +737,7 @@ background: #838383;
 }
 .p45{
     padding: 0;
-    overflow: inherit;
+    overflow: hidden;
 }
 .mobile-nav li {
     float: left;
@@ -739,7 +754,7 @@ background: #838383;
 .logo {
     display: none;
 }
-.left-bar {
+.setting-bar {
     display: none;
 }
 .social-list li {
@@ -756,7 +771,7 @@ background: #838383;
 .buy , .footer-1{
     display: none;
 }
-.left-bar {
+.setting-bar {
     width: 100%;
     float: left;
     background: #eee;
@@ -767,7 +782,7 @@ background: #838383;
 .wid100 {
     padding: 0;
 }
-.user-left {
+.setting-item {
     color: #8f8f8f;
     float: left;
     width: 100%;
@@ -775,7 +790,7 @@ background: #838383;
     padding: 10px 0;
     border-bottom: 1px solid #ffffff;
 }
-.user-right {
+.account-bar {
     top: 62px;
     left: 0px;
     background: #eee;
@@ -785,18 +800,18 @@ background: #838383;
 .navbar::after {
     display: none;
 }
-.user-right li {
+.account-bar li {
     display: block;
     text-align: center;
     border-bottom: 1px solid #ffffff;
 }
-.user-right a {
+.account-bar a {
     padding: 10px 0;
     display: block;
 }
 
 
-h2 {
+.small-title {
     font-size: 16px;
 }
 .copyright {
@@ -814,7 +829,7 @@ h2 {
 }
 @media (max-width: 768px) {
   .content {
-    width: 750px;
+    width: 100%;
   } 
   .product {
     width:47%;
@@ -856,7 +871,7 @@ h2 {
     .product-line::after {
     width: 55%;
 }
-    h2 {
+    .small-title {
     font-size: 20px;
     padding-bottom: 15px;
 }
@@ -890,7 +905,7 @@ h2 {
 .buy {
     bottom: 550px;
     }
-.user-right li {
+.account-bar li {
     margin: 0px 3px;
 }
 .navbar::before {
@@ -921,7 +936,7 @@ background: #838383;
     margin: 0 auto;
     margin-top: 3px;
 }
-.user-right {
+.account-bar {
     top: 115px;
     left: 15px;
 }
@@ -978,7 +993,7 @@ background: #838383;
 .logo {
     display: none;
 }
-.left-bar {
+.setting-bar {
     display: none;
 }
 .social-list li {
@@ -995,7 +1010,7 @@ background: #838383;
 .buy , .footer-1{
     display: none;
 }
-.left-bar {
+.setting-bar {
     width: 100%;
     float: left;
     background: #eee;
@@ -1006,7 +1021,7 @@ background: #838383;
 .wid100 {
     padding: 0;
 }
-.user-left {
+.setting-item {
     color: #8f8f8f;
     float: left;
     width: 100%;
@@ -1014,7 +1029,7 @@ background: #838383;
     padding: 10px 0;
     border-bottom: 1px solid #ffffff;
 }
-.user-right {
+.account-bar {
     top: 62px;
     left: 0px;
     background: #eee;
@@ -1024,12 +1039,12 @@ background: #838383;
 .navbar::after {
     display: none;
 }
-.user-right li {
+.account-bar li {
     display: block;
     text-align: center;
     border-bottom: 1px solid #ffffff;
 }
-.user-right a {
+.account-bar a {
     padding: 10px 0;
     display: block;
 }
@@ -1041,7 +1056,7 @@ background: #838383;
 .footer-post img {
     width: 20%;
 }
-h2 {
+.small-title {
     font-size: 16px;
 }
 .copyright {
