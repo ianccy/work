@@ -97,8 +97,9 @@ function myFunction() {
     return go;
 }
 function run(){
-document.getElementById("end").innerHTML="跑跑跑~向前跑~";
+document.getElementById("end").innerHTML="跑 跑 跑 ~";
 var i = setInterval(function(){myFunction()}, 50);
+setTimeout(function( ) {document.getElementById("end").innerHTML="向 前 跑 ~";}, 2000);
 setTimeout(function( ) { end(i) }, 5000);
 }
 function end(i){
