@@ -352,6 +352,7 @@ a:hover {
 }
 .banner {
 	padding: 30px 0;
+    overflow: hidden;
 }
 .banner-main {
 	background: #fff;
