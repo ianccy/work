@@ -94,6 +94,7 @@ function getRandomArbitrary(min, max) {
 function myFunction() {
     var go =myArray[getRandomArbitrary(0, 22)];
     document.getElementById("demo").innerHTML=go;
+    return go;
 }
 function run(){
 document.getElementById("end").innerHTML="跑跑跑~向前跑~";
@@ -102,7 +103,7 @@ setTimeout(function( ) { end(i) }, 5000);
 }
 function end(i){
     clearInterval(i);
-    document.getElementById("end").innerHTML="恭喜恭喜，記得去吃唷!";
+    document.getElementById("end").innerHTML="恭喜選到+go+，記得去吃唷!";
 }
 </script>
 
