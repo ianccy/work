@@ -78,6 +78,7 @@ subway,城中美食,頂呱呱,肯德基,華南便當,台生古早味,四海遊�
 <button class="button" onclick="run()">點下去別後悔</button>
 
 <p class="shop" style="color: #230808;text-align: center;font-family: 微軟正黑體;font-weight: 900;" id="demo"></p>
+<p id="end"></p>   
 <footer>公平公正公開~~<footer>
 <script>
 var myArray = ['subway','城中美食','頂呱呱','肯德基','華南便當','台生古早味','四海遊龍','八方雲集','麥當勞','三商巧福','sukiya','阿姨炒手','羊城','小雞飯'
@@ -91,7 +92,11 @@ function myFunction() {
 }
 function run(){
 var i = setInterval(function(){myFunction()}, 50);
-setTimeout(function( ) { clearInterval( i ); }, 5000);
+setTimeout(function( ) { end() }, 5000);
+}
+function end(){
+    clearInterval( i );
+    document.getElementById("end").innerHTML="恭喜恭喜，記得去吃唷!";
 }
 </script>
 
