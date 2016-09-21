@@ -104,6 +104,9 @@ function getRandomArbitrary(min, max) {
 }
 function myFunction() {
     var go =myArray[getRandomArbitrary(0, 22)];
+    if(myArray[22]){
+        alert(myArray[22]);
+    }
     document.getElementById("demo").innerHTML=go;
     return go;
 }
