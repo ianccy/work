@@ -92,10 +92,10 @@ function myFunction() {
 }
 function run(){
 var i = setInterval(function(){myFunction()}, 50);
-setTimeout(function( ) { end() }, 5000);
+setTimeout(function( ) { end(i) }, 5000);
 }
-function end(){
-    clearInterval( i );
+function end(i){
+    clearInterval(i);
     document.getElementById("end").innerHTML="恭喜恭喜，記得去吃唷!";
 }
 </script>
