@@ -2,18 +2,18 @@
 <html>
 <body>
 
-<p>Display "Good day!" if the hour is less than 18:00:</p>
+<p>今天要吃啥米米米米.</p>
 
-<p id="demo">Good Evening!</p>
-<p id="demo2">Good Evening!</p>
+<button onclick="myFunction()">Try it</button>
+
+<p id="demo"></p>
+
 <script>
-var a = 5;
-if (a==5) {
-    document.getElementById("demo").innerHTML = "Good day!";
-   var b = 4;
-}
-if (b==4) {
-    document.getElementById("demo2").innerHTML = "xxxxxxxxxx day!";
+var myArray = ['subway','城中美食','頂呱呱','肯德基','華南便當','台生古早味','四海遊龍','八方雲集','麥當勞','三商巧福','sukiya','阿姨炒手','羊城','小雞飯'
+,'十三川','十三川隔壁牛肉麵','雲客來','巷仔口義大利麵','延平南路水餃','燒臘飯','早餐店(隨便)','三代滷肉飯','田園牛肉麵','吉野家','再選一次，因為我太懶沒弄好']; 
+function myFunction() {
+    var go =myArray[Math.floor((Math.random()*100)/4)];
+    document.getElementById("demo").innerHTML=myArray[Math.floor((Math.random()*100)/4)];
 }
 </script>
 
