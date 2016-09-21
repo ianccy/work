@@ -3,7 +3,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <head>
 <body>
-
+<style>
+button:hover {
+    opacity:0.6;
+}
+</style>
 <p style="text-align: center;color: red;font-size: 50px;font-family: 微軟正黑體;font-weight: 900;">今天要吃啥米米米米.</p>
 
 <button style="cursor: pointer;left:50%;position: absolute;padding: 5px 15px;background: #e0931f;color: white; border-radius: 10px;border-radius: 10px;box-shadow: 1px 1px 4px #000000;" onclick="myFunction()">Try it</button>
@@ -14,7 +18,10 @@
 var myArray = ['subway','城中美食','頂呱呱','肯德基','華南便當','台生古早味','四海遊龍','八方雲集','麥當勞','三商巧福','sukiya','阿姨炒手','羊城','小雞飯'
 ,'十三川','十三川隔壁牛肉麵','雲客來','巷仔口義大利麵','延平南路水餃','燒臘飯','早餐店(隨便)','三代滷肉飯','田園牛肉麵','吉野家']; 
 function myFunction() {
-    var go =myArray[Math.floor(((Math.random()*100)-8)/4)];
+    var go =myArray[Math.floor((Math.random()*100)/4)];
+    if(go=== undefined || go === null){
+        myFunction()
+    }
     document.getElementById("demo").innerHTML=go;
 }
 </script>
