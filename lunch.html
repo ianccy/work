@@ -99,7 +99,10 @@ function myFunction() {
 function run(){
 document.getElementById("end").innerHTML="跑 跑 跑 ~";
 var i = setInterval(function(){myFunction()}, 50);
-setTimeout(function( ) {document.getElementById("end").innerHTML="向 前 跑 ~";}, 2000);
+setTimeout(function( ) {document.getElementById("end").innerHTML="向 前 跑 ~";}, 1000);
+setTimeout(function( ) {document.getElementById("end").innerHTML="經 過 小 巷 和 大 道 ~";}, 2000);
+setTimeout(function( ) {document.getElementById("end").innerHTML="跑 跑 跑 向 前 跑 ~";}, 3000);
+setTimeout(function( ) {document.getElementById("end").innerHTML= '<img src="https://ianpig.github.io/work/img/%E5%8C%85%E5%81%89%E9%8A%98.jpg">';}, 4000);
 setTimeout(function( ) { end(i) }, 5000);
 }
 function end(i){
