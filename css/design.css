@@ -828,6 +828,9 @@ background: #838383;
 
 }
 @media (max-width: 768px) {
+    .banner {
+        overflow: inherit;
+    }
   .content {
     width: 100%;
   } 
