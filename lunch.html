@@ -4,13 +4,40 @@
     <head>
 <body>
 <style>
-button:hover {
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+.button {
+    cursor: pointer;
+    left:50%;
+    position: absolute;
+    padding: 5px 15px;
+    background: #e0931f;
+    color: white; 
+    border-radius: 10px;
+    border-radius: 10px;b
+    ox-shadow: 1px 1px 4px #000000;
+}
+.button:hover {
     opacity:0.6;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        width:;
+    }
+    .button {
+    left: 32%;
+    position: absolute;
+    padding: 5px 56px;
+    }
 }
 </style>
 <p style="text-align: center;color: red;font-size: 50px;font-family: 微軟正黑體;font-weight: 900;">今天要吃啥米米米米.</p>
 
-<button style="cursor: pointer;left:50%;position: absolute;padding: 5px 15px;background: #e0931f;color: white; border-radius: 10px;border-radius: 10px;box-shadow: 1px 1px 4px #000000;" onclick="myFunction()">Try it</button>
+<button class="button" onclick="myFunction()">Try it</button>
 
 <p style="color: #230808;font-size: 140px;text-align: center;font-family: 微軟正黑體;font-weight: 900;" id="demo"></p>
 
