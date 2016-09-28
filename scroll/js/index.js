@@ -1,7 +1,7 @@
 $(document).ready(function() {
 function check_if_in_view() {
 /*判斷手機尺寸*/
-if(document.body.clientWidth>400){
+
 /*判斷螢幕 scrollTop:滾動距離，height:高度*/
   var window_bottom_position = ($(window).scrollTop() + $(window).height());
 
@@ -16,11 +16,8 @@ if(document.body.clientWidth>400){
       $(this).removeClass('in-view');
     }
   });
-}
-else {
-  $('.animation-element').addClass('in-view');
-}
+
 }
 $(window).on('scroll resize', check_if_in_view);
-
+$(window).trigger('scroll');
 });
