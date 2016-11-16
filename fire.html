@@ -119,6 +119,22 @@ DeleteMarkers();
   map.setZoom(14);
   }));
 });
+
+var map_color='#eee'
+	map_light='-20';
+
+var styles =[
+	{
+		stylers:[
+		{hue:$map_color},
+		{lightness:$map_light},
+		]
+	}
+];
+
+map.setOptions({styles:styles});
+
+
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
