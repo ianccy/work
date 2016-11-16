@@ -93,13 +93,6 @@ DeleteMarkers();
             }
             
 }
-        if(markers.length>10){
-          var $map_color='#212121',
-              $map_light='-20';
-
-          map.setOptions({styles: styles});
-          alert('ok');
-        };
     function DeleteMarkers() {
     	if(typeof(markers)!=='undefined'){
         //Loop through all the markers and remove   
@@ -108,14 +101,7 @@ DeleteMarkers();
         }   
     }
         markers = [];
-    };  
-    function CreateMarkers() {   
-        //Loop through all the markers and remove   
-        for (var i = 0; i < markers.length; i++) {   
-            markers[i].setMap(null);
-        }   
     };
-
 
       }
     });
