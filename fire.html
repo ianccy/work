@@ -37,8 +37,6 @@ $(function(){
     var thisData = JSON.parse(data);
     /*每筆資料切割item*/
     $.each(thisData,function(i,item){
-	    
-	alert(item);
         work = '<li class="list-data">\
         <h2>'+item["測  照  地  點"]+'</h2>\
         <p>拍照方向：'+item['測照方向']+'</p>\
