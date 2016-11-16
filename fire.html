@@ -89,6 +89,13 @@ DeleteMarkers();
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
+				if(markers.length>10){
+          var $map_color='#212121',
+              $map_light='-20';
+
+          map.setOptions({styles: styles});
+          alert('ok');
+        };
             }
             
 }
@@ -114,13 +121,6 @@ DeleteMarkers();
     });
   var site = $('select option:selected').val().split(',');
   map.setCenter(new google.maps.LatLng(site[0], site[1]));
-          if(markers.length>10){
-          var $map_color='#212121',
-              $map_light='-20';
-
-          map.setOptions({styles: styles});
-          alert('ok');
-        };
   map.setZoom(14);
   }));
 });
