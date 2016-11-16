@@ -89,7 +89,12 @@ DeleteMarkers();
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
-				 alert(markers.length);
+				if(markers.length>10){
+          var $map_color='#212121',
+              $map_light='-20';
+
+          map.setOptions({styles: styles});
+        };
             }
             
 }
@@ -119,7 +124,7 @@ DeleteMarkers();
   }));
 });
 
-var $map_color='#212121',
+var $map_color='#eee',
 	$map_light='-20';
 
 var styles =[
