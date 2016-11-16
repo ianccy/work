@@ -89,7 +89,7 @@ DeleteMarkers();
                         infoWindow.open(map, marker);
                     });
                 })(marker, data);
-		alert(markers.length);
+				 alert(markers.length);
             }
             
 }
@@ -103,6 +103,12 @@ DeleteMarkers();
     }
         markers = [];
     };  
+    function CreateMarkers() {   
+        //Loop through all the markers and remove   
+        for (var i = 0; i < markers.length; i++) {   
+            markers[i].setMap(null);
+        }   
+    };
 
 
       }
