@@ -419,7 +419,7 @@
         color:#000;
     }
     .col-city,.col-area,.col-type,.col-price {
-        width: 155px;
+        width: 130px;
         float: left;
         margin-right:20px; 
     }
