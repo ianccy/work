@@ -809,7 +809,7 @@
                 }
             } else {
                 // use radio buttons
-                $inputElement = $('<input id="selectDisplay" type="radio" class="sol-radio"/>')
+                $inputElement = $('<input type="radio" class="sol-radio"/>')
                     .on('change', function() {
                         // when selected notify all others of being deselected
                         self.$selectionContainer.find('input[type="radio"][name="' + inputName + '"]').not($(this)).trigger('sol-deselect');
