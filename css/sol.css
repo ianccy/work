@@ -330,6 +330,7 @@
     animation-timing-function: linear;
     animation-iteration-count: infinite;
 }
+/*下方自行編輯css*/
     body {
         font-family: "微軟正黑體";
     }
@@ -361,8 +362,15 @@
         position: absolute;
         display: none;
         top: 179px;
+        z-index: 10000;
+        background: #fff;
     }
-    
+    .sol-label label {
+        color: #333;
+    }
+    .sol-label label:hover{
+        color: #fff;
+    }
     .keywordBottom {
         padding: 16px 0;
         border: 1px solid #ccc;
@@ -417,6 +425,14 @@
     }
     .col-price input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
         color: #555;;
+    }
+    .sol-input-container input[type="text"] {
+        min-height: 0;
+    }
+    .sol-caret-container .sol-caret {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     }
     .sol-quick-delete,
     .sol-selected-display-item-text {
