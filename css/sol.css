@@ -365,10 +365,10 @@
         z-index: 10000;
         background: #fff;
     }
-    ..sol-label-text {
+    .sol-label-text {
         color: #333;
     }
-    ..sol-label-text:hover{
+    .sol-label-text:hover{
         color: #fff;
     }
     .keywordBottom {
