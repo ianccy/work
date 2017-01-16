@@ -11,9 +11,9 @@
 </head>
 <script>
 
-  $(document).on("scrollstart",function(){
-    alert("Started scrolling!");
-  });                       
+$('body').bind('touchmove', function(e) { 
+    alert($(this).scrollTop()); // Replace this with your code.
+});         
 
 </script>
 <body>
