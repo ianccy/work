@@ -10,10 +10,12 @@
 <title>Document</title>
 </head>
 <script>
+$(function(){
+$(window).scroll(function() {
+   alert("scrll");
+});
 
-$('body').on('swipe', function(e) { 
-    alert($(this).scrollTop()); // Replace this with your code.
-});         
+});
 
 </script>
 <body>
