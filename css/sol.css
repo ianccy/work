@@ -126,7 +126,7 @@
     position: fixed;
     left: inherit;
     top: inherit;
-    z-index: 10000;
+    z-index: 100;
     border: 1px solid #ccc;
     background: #fff;
     border-radius: 4px;
@@ -347,7 +347,7 @@
         width: 100%;
         position: absolute;
         height: 16px;
-        z-index: 500000000;
+        z-index: 100;
         border: 1px solid #cccccc;
         border-bottom: none;
     }
