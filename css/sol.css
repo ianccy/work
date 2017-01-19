@@ -58,7 +58,7 @@
 }
 
 .sol-container.sol-active .sol-inner-container {
-    z-index: 9999;
+    z-index: 100;
     background: #fff;
 
     border-color: rgba(82, 168, 236, 0.8);
@@ -126,7 +126,7 @@
     position: absolute;
     left: inherit;
     top: inherit;
-    z-index: 10000;
+    z-index: 100;
     border: 1px solid #ccc;
     background: #fff;
     border-radius: 4px;
@@ -348,7 +348,7 @@
         width: 100%;
         position: absolute;
         height: 16px;
-        z-index: 500000000;
+        z-index: 100;
         border: 1px solid #cccccc;
         border-bottom: none;
     }
@@ -362,7 +362,7 @@
         position: absolute;
         display: none;
         top: 179px;
-        z-index: 10000;
+        z-index: 100;
         background: #fff;
     }
     .sol-label-text {
