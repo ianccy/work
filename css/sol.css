@@ -58,7 +58,7 @@
 }
 
 .sol-container.sol-active .sol-inner-container {
-    z-index: 9999;
+    z-index: 100;
     background: #fff;
 
     border-color: rgba(82, 168, 236, 0.8);
