@@ -1,17 +1,3 @@
-/*
- * SOL - Searchable Option List jQuery plugin
- * Version 2.0.2
- * https://pbauerochse.github.io/searchable-option-list/
- *
- * Copyright 2015, Patrick Bauerochse
- *
- * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
- *
- */
-
-/*jslint nomen: true */
-;
 (function($, window, document) {
     'use strict';
 
@@ -77,7 +63,7 @@
                     }
 
                     this.$selectionContainer
-                        .css('left', $('.first_select').offset().left)
+                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
                     $('#closeSelect').click(function(event) {
                         $('.sol-container').removeClass('sol-active')
                         $('.displayKeyword').css('display', 'none')
@@ -157,7 +143,7 @@
                         // .css('top', Math.floor(selectionContainerYPos)+15)
                         // .css('left', Math.floor(this.$container.offset().left))
                         // .css('width', selectionContainerWidth);
-                        .css('left', $('.first_select').offset().left)
+                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
                         // .css('width', 600);
                         // remember the position
                     this.config.displayContainerAboveInput = displayContainerAboveInput;
