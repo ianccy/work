@@ -519,3 +519,9 @@
     .sol-caret {
         transition: 0.5s;
     }
+    .inputprice {
+        color:#555;
+        font-weight: 100;
+        margin-left: 20px;
+        width: 60px;
+    }
