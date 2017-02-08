@@ -72,7 +72,7 @@
                 onRendered: undefined,
                 onOpen: function() {
                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top;
-
+                    alert($('.sol-inner-container').offset().top)
                     $('.displayKeyword').css('top', selectheight-3)
                 },
                 //  function(){            
