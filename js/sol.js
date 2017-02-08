@@ -1,17 +1,3 @@
-/*
- * SOL - Searchable Option List jQuery plugin
- * Version 2.0.2
- * https://pbauerochse.github.io/searchable-option-list/
- *
- * Copyright 2015, Patrick Bauerochse
- *
- * Licensed under the MIT license:
- * http://www.opensource.org/licenses/MIT
- *
- */
-
-/*jslint nomen: true */
-;
 (function($, window, document) {
     'use strict';
 
@@ -77,7 +63,7 @@
                     }
 
                     this.$selectionContainer
-                        .css('left', $('.first_select').offset().left)
+                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
                     $('#closeSelect').click(function(event) {
                         $('.sol-container').removeClass('sol-active')
                         $('.displayKeyword').css('display', 'none')
@@ -86,8 +72,7 @@
                 onRendered: undefined,
                 onOpen: function() {
                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top;
-                    alert("OuterHeight"+this.$selectionContainer.outerHeight())
-                    alert("offset"+this.$selectionContainer.offset().top)
+                    alert($('.sol-inner-container').offset().top)
                     $('.displayKeyword').css('top', selectheight-3)
                 },
                 //  function(){            
@@ -158,7 +143,7 @@
                         // .css('top', Math.floor(selectionContainerYPos)+15)
                         // .css('left', Math.floor(this.$container.offset().left))
                         // .css('width', selectionContainerWidth);
-                        .css('left', $('.first_select').offset().left)
+                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
                         // .css('width', 600);
                         // remember the position
                     this.config.displayContainerAboveInput = displayContainerAboveInput;
@@ -404,13 +389,6 @@
         },
 
         _initializeInputEvents: function() {
-            //判斷項目value 讓按鈕無法點擊
-            if($(".first_select input[id$='selectDisplay']" ).attr("value")==""
-                ||$(".first_select input[id$='selectDisplay']" ).attr("value")==undefined){
-                $('.searchButton').addClass('disable_button')
-            }else{
-                $('.searchButton').removeClass('disable_button')
-            }
             // form event
             var self = this,
                 $form = this.$input.parents('form').first();
