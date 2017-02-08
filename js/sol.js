@@ -389,13 +389,6 @@
         },
 
         _initializeInputEvents: function() {
-            //判斷項目value 讓按鈕無法點擊
-            if($(".first_select input[id$='selectDisplay']" ).attr("value")==""
-                ||$(".first_select input[id$='selectDisplay']" ).attr("value")==undefined){
-                $('.searchButton').addClass('disable_button')
-            }else{
-                $('.searchButton').removeClass('disable_button')
-            }
             // form event
             var self = this,
                 $form = this.$input.parents('form').first();
