@@ -358,7 +358,7 @@
     }
     
     .displayKeyword {
-        width: 591px;
+        width: 580px;
         position: absolute;
         display: none;
         top: 179px;
@@ -455,7 +455,7 @@
     
     .sol-container.sol-active .sol-selection-container,
     .sol-container.sol_active .sol-selection-container {
-        width: 591px;
+        width: 580px;
         margin-top: 45px;
         border-bottom: none;
         /*        position: absolute;
