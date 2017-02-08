@@ -71,7 +71,7 @@
                 },
                 onRendered: undefined,
                 onOpen: function() {
-                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top-$(window).scrollTop();
+                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top-$(window).scrollTop()-$('.container').outerHeight();
 
                      $('.displayKeyword').css('top', selectheight-3)
 
