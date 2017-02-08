@@ -71,9 +71,10 @@
                 },
                 onRendered: undefined,
                 onOpen: function() {
-                    var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top;
-                    alert($('.sol-inner-container').offset().top)
-                    $('.displayKeyword').css('top', selectheight-3)
+                    // var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top;
+                    $('#displayKeyword').appendTo(this.$selectionContainer)
+                    // $('.displayKeyword').css('top', selectheight-3)
+
                 },
                 //  function(){            
                 // //計算高度
