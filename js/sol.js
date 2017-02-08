@@ -86,7 +86,8 @@
                 onRendered: undefined,
                 onOpen: function() {
                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top;
-
+                    alert("OuterHeight"+this.$selectionContainer.outerHeight())
+                    alert("offset"+this.$selectionContainer.offset().top)
                     $('.displayKeyword').css('top', selectheight-3)
                 },
                 //  function(){            
