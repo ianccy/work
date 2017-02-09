@@ -42,6 +42,10 @@
     background: #fff;
 }
 
+.header-container {
+	padding-bottom: 0;
+}
+
 .sol-container * {
     margin: 0;
     padding: 0;
