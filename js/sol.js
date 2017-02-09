@@ -71,9 +71,12 @@
                 },
                 onRendered: undefined,
                 onOpen: function() {
-                     var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top-$(window).scrollTop()-$('.container').outerHeight();
+                    $('.displayKeyword').appendTo(this.$selectionContainer)
+                    /* 
+                    var selectheight = this.$selectionContainer.outerHeight() + this.$selectionContainer.offset().top-$(window).scrollTop()-$('.container').outerHeight();
                        alert($('.container').outerHeight())
                      $('.displayKeyword').css('top', selectheight-3)
+                     */
 
                 },
                 //  function(){            
