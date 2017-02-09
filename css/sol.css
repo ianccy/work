@@ -361,7 +361,6 @@
         width: 580px;
         position: absolute;
         display: none;
-        top: 179px;
         z-index: 100;
         background: #fff;
     }
