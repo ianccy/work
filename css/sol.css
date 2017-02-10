@@ -366,14 +366,6 @@
     display: inline-block;
 }
 
-.displayKeyword {
-    width: 580px;
-    position: absolute;
-    display: none;
-    z-index: 100;
-    background: #fff;
-}
-
 .sol-label-text {
     color: #333;
 }
@@ -383,17 +375,11 @@
 }
 
 .keywordBottom {
-    padding: 16px 0;
-    border: 1px solid #ccc;
-    width: 100%;
+    padding: 16px 5px;
 }
 
 .searchDiv {
-    border: 1px solid #ccc;
-    border-top: none;
-    border-bottom: none;
     padding: 15px 0;
-    position: relative;
     text-align: center;
 }
 
