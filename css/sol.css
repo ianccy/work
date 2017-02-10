@@ -417,6 +417,10 @@
     background: #eee;
 }
 
+.displayKeyword {
+    display:none;
+}
+
 .keywordBar {
     width: 300px;
     height: 28px;
