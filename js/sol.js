@@ -1,5 +1,4 @@
 (function($, window, document) {
-    'use strict';
 
     // constructor
     var SearchableOptionList = function($element, options) {
