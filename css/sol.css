@@ -500,3 +500,6 @@
     .sol-caret {
         transition: 0.5s;
     }
+    #tagDelete {
+    cursor: pointer;
+    }
