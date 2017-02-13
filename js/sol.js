@@ -63,7 +63,7 @@
                     }
 
                     this.$selectionContainer
-                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
+                        .css('left', $('.col-city').offset().left - this.$container.offset().left )
                     $('#closeSelect').click(function(event) {
                         $('.sol-container').removeClass('sol-active')
                         $('.displayKeyword').css('display', 'none')
@@ -147,7 +147,7 @@
                         // .css('top', Math.floor(selectionContainerYPos)+15)
                         // .css('left', Math.floor(this.$container.offset().left))
                         // .css('width', selectionContainerWidth);
-                        .css('left', $('.first_select').offset().left - this.$container.offset().left )
+                        .css('left', $('.col-city').offset().left - this.$container.offset().left )
                         // .css('width', 600);
                         // remember the position
                     this.config.displayContainerAboveInput = displayContainerAboveInput;
