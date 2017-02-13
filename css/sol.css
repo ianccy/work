@@ -422,10 +422,11 @@
 }
 
 .keywordBar {
-    width: 300px;
+    width: 200px;
     height: 28px;
     vertical-align: top;
     margin: 1px 0;
+    margin-right: 20px;
 }
 
 .keywordBottom {
@@ -440,9 +441,14 @@ input::placeholder {
 .col-area,
 .col-type,
 .col-price {
-    width: 130px;
+    width: 120px;
     float: left;
-    margin-right: 20px;
+    margin-right: 25px;
+}
+.col-more {
+    width: 95px;
+    float: left;
+    margin-right: 25px;
 }
 
 .col-price input::-webkit-input-placeholder {
