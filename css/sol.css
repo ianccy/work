@@ -443,10 +443,10 @@
         top: 45px;*/
     }
     
-    .second_select .sol-optiongroup {
+    .col-area .sol-optiongroup {
         display: none;
     }
-/*    .second_select .sol-optiongroup:nth-child(1) {
+/*    .col-area .sol-optiongroup:nth-child(1) {
         display: block;
     }*/
     .sol-optiongroup-label {
@@ -459,10 +459,10 @@
         width: 50%;
         float: left;
     }
-    .first_select .sol-option {
+    .col-city .sol-option {
         width: 33%;
     }
-    .second_select .sol-option {
+    .col-area .sol-option {
         width: 33%;
     }
     
