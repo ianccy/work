@@ -555,3 +555,6 @@ input::placeholder {
     margin-left: 20px;
     width: 60px;
 }
+#tagDelete {    
+cursor:pointer;
+}
