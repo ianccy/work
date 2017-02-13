@@ -43,7 +43,7 @@
 }
 
 .header-container {
-	padding-bottom: 0;
+    padding-bottom: 0;
 }
 
 .sol-container * {
@@ -486,12 +486,12 @@ input::placeholder {
         top: 45px;*/
 }
 
-.second_select .sol-optiongroup {
+.col-area .sol-optiongroup {
     display: none;
 }
 
 
-/*    .second_select .sol-optiongroup:nth-child(1) {
+/*    .col-area .sol-optiongroup:nth-child(1) {
         display: block;
     }*/
 
@@ -506,11 +506,11 @@ input::placeholder {
     float: left;
 }
 
-.first_select .sol-option {
+.col-city .sol-option {
     width: 33%;
 }
 
-.second_select .sol-option {
+.col-area .sol-option {
     width: 33%;
 }
 
