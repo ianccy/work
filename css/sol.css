@@ -422,7 +422,7 @@
 }
 
 .keywordBar {
-    width: 200px;
+    width: 215px;
     height: 28px;
     vertical-align: top;
     margin: 1px 0;
@@ -441,7 +441,7 @@ input::placeholder {
 .col-area,
 .col-type,
 .col-price {
-    width: 120px;
+    width: 135px;
     float: left;
     margin-right: 25px;
 }
