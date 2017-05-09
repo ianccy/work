@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>react測試</title>
+  </head>
+  <body>
+    <div id="greeting-div"></div>
+
+    <script src="https://fb.me/react-15.0.0.js"></script>
+    <script src="https://fb.me/react-dom-15.0.0.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+    <script type="text/babel">
+      var Greeting = React.createClass({
+        render: function() {
+          return (
+            <h1>爬蟲測試爬react測試chuian測試爬蟲測試爬react測試chuian測試爬蟲測試爬react測試chuian測試</h1>
+          )
+        }
+      });
+
+      ReactDOM.render(
+        <Greeting/>,
+        document.getElementById('greeting-div')
+      );
+    </script>
+  </body>
+</html>
