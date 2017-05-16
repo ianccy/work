@@ -1,7 +1,7 @@
       var Greeting = React.createClass({
         render: function() {
           return (
-            <h1>爬蟲測試爬react測試chuian測試爬蟲測試爬react測試chuian測試爬蟲測試爬react測試chuian測試</h1>
+            <h1>今天天氣晴天2017/5/16 ianchu 朱峻儼測試 react 爬蟲 來爬我來爬我來爬我來爬我來爬我RRRRRRRRRRRRRRRRRRR</h1>
           )
         }
       });
