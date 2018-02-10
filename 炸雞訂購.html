@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>鹹酥雞訂購 - 示範</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <style>
+    body {
+      padding-top: 54px;
+    }
+    .form-group {
+      text-align: left;
+  }
+  img.img-responsive {
+    height: 400px;
+  }
+    @media (min-width: 992px) {
+      body {
+        padding-top: 56px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Page Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h1 class="mt-5">哈嚕 我是鹹酥雞老闆</h1>
+        <p class="lead">請問你要吃蝦米勒!</p>
+        <ul class="list-unstyled">
+          <li class="col-xs-6">
+            <img class="img-responsive" src="./img/鹹酥雞.jpg" alt="">
+            <h2>鹹酥雞</h2>
+            <p>NT.50</p>
+            <select name="number" class="select form-control" data-price="50" data-name="鹹酥雞">
+              <option style="display:none" value="">請選擇數量</option>
+              <option value="1">1份</option>
+              <option value="2">2份</option>
+              <option value="3">3份</option>
+              <option value="4">4份</option>
+              <option value="5">5份</option>
+              <option value="6">6份</option>
+              <option value="7">7份</option>
+              <option value="8">8份</option>
+              <option value="9">9份</option>
+            </select>
+          </li>
+          <li class="col-xs-6">
+            <img class="img-responsive" src="./img/由於.JPG" alt="">
+            <h2>魷魚</h2>
+            <p>NT.50</p>
+            <select name="number" class="select form-control" data-price="50" data-name="鹹酥雞">
+              <option style="display:none" value="">請選擇數量</option>
+              <option value="1">1份</option>
+              <option value="2">2份</option>
+              <option value="3">3份</option>
+              <option value="4">4份</option>
+              <option value="5">5份</option>
+              <option value="6">6份</option>
+              <option value="7">7份</option>
+              <option value="8">8份</option>
+              <option value="9">9份</option>
+            </select>
+          </li>
+        </ul>
+        <div class="form-group col-xs-12">
+          <label for="pwd">姓名:</label>
+          <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group col-xs-12">
+          <label for="pwd">電話:</label>
+          <input type="number" class="form-control" id="phone">
+        </div>
+
+        <button type="button" id="sendOrder" class="btn btn-primary col-xs-12">送出訂單</button>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+    $(function(){
+        $('#sendOrder').click(function(e){
+        var status = true;
+        var name = $('#name').val();
+        var phone = $('#phone').val();   
+        var order = '';
+        var price = 0;
+        $('input').focus(function(){
+          $(this).css('border','');
+        });
+        $('.select').each(function(index) {
+          if($(this).val() !== ''){
+            order += $(this).data('name') + ' - ' + $(this).val() + '份';
+            price += Number($(this).data('price')) * Number($(this).val());
+          }
+        });
+
+        if(name == ''){
+          $('#name').css('border','1px solid #ff0000');
+          status = false;
+        }
+        if(phone == ''){
+          $('#phone').css('border','1px solid #ff0000');
+          status = false;
+        }
+        if(order == ''){
+          alert('請選擇訂購品項喔');
+          status = false;
+        }
+        if(status){
+          var currentdate = new Date();
+          var filltime = currentdate.getFullYear() + "/"
+                + (currentdate.getMonth() + 1) + "/"
+                + currentdate.getDate() + "  "
+                + currentdate.getHours() + ":"
+                + currentdate.getMinutes() + ":"
+                + currentdate.getSeconds();
+
+          var data = {
+            'name' : name,
+            'phone':phone,
+            'time': filltime,
+            'order': order,
+            'price': price,
+          }
+          send(data);
+        }
+      });
+    });
+    function send(data){
+      $.ajax({
+        type: "get",
+        url: "https://script.google.com/macros/s/AKfycbz3fU3FVDmIQehtWX6ecKuV_A67lE64FEQ-ekmOZ_jZDyY96z0/exec",
+        data: data,
+        dataType: "JSON",
+        success: function (response) {
+          console.log(response);
+          alert('感謝您的訂購！！');
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
