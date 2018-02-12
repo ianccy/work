@@ -113,11 +113,11 @@
         });
         $('.select').each(function(index) {
           if($(this).val() !== ''){
-            order += $(this).data('name') + ' - ' + $(this).val() + '份';
+            order += $(this).data('name') + ' - ' + $(this).val() + '份 \n';
             price += Number($(this).data('price')) * Number($(this).val());
           }
         });
-
+        order = order.substring(0, order.length - 1);
         if(name == ''){
           $('#name').css('border','1px solid #ff0000');
           status = false;
