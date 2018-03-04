@@ -1,23 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './index.css';
-
-// ReactDOM.render(
-//   <App />,
-//   document.getElementById('root')
-// );
-// ReactDOM.render(
-//   <h1>Hello, world!</h1>,
-//   document.getElementById('root')
-// );
-function time(){
-	return '爬蟲測試爬react測試chuian測試';
-}
-const aaaa = (
-	<h1>{time()}</h1>
-);
-
-ReactDOM.render(
-aaaa,document.getElementById('root')
+import Application from './container/Application.js';
+const url = "https://app.voicetube.com/rand_data.json";
+const sort = [{name:'發佈時間',type:'publish'},
+              {name:'觀看次數',type:'views'},
+              {name:'收藏次數',type:'collectCount'},
+            ];
+const filter = [{name:'不限',type:'',dur:''},
+              {name:'4分鐘以下',type:'down',dur:'240'},
+              {name:'5-10分鐘',type:'range',dur:'300-600'},
+              {name:'超過10分鐘',type:'up',dur:'600'},
+            ];
+ReactDOM.render( 
+	<div>
+    <Application url={url} sort={sort} filter={filter}/>
+    </div>,
+    document.getElementById('root')
 );
