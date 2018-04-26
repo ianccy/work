@@ -25,7 +25,7 @@
     margin: 0 auto;
    }
    textarea {
-    height:150px;
+    height:130px;
    }
    h1{
      font-size:19px;
@@ -48,7 +48,7 @@
     <div class="text-right">
     <button type="submit" id="ga_Create" class="pure-button pure-button-primary">產生 ga event</button>
     </div>
-    <div class="input_container" style="display:none;">
+    <div class="input_container">
       請複製貼上html內 : 
     <input id="ga_Input" />
       請複製貼上 <／body>上方 : (記得替換掉 idName ) 
@@ -96,10 +96,6 @@ document.querySelector('#ga_Create').addEventListener('click',function(e){
 
   document.querySelector('#ga_Input').value = str;
   document.querySelector('#ga_Input2').value = '<script'+'>' + str2 + '<'+'/script>';
-
-  document.querySelector('.input_container').style.display= 'block';
-
-  
   
 });
 
