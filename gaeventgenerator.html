@@ -77,13 +77,13 @@ document.querySelector('#ga_Create').addEventListener('click',function(e){
   }
 
   if(document.querySelector('#ga_Value').value !== ''){
-    val = document.querySelector('#ga_Value').value;
+    val = document.querySelector('#ga_Value').value.parseInt();
   }
 
-  var str = `onclick="ga('send', 'event', ${cate},${act}, ${label}, ${val});"`;
+  var str = `onclick="ga('send', 'event', '${cate}','${act}', '${label}', ${val});"`;
   var str2 =`
   document.querySelector('#idName').addEventListener('click',function(e){
-    ga('send', 'event', ${cate},${act}, ${label}, ${val});"
+    ga('send', 'event', '${cate}','${act}', '${label}', ${val});"
   });
   `;
 
