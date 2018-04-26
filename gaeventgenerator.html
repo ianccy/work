@@ -1,0 +1,102 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>ga event 事件產生器 </title>
+   <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+   <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css">
+   <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+   <!-- Bootstrap core CSS -->
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+ </head>
+ <style>
+   div {
+     padding: 10px;
+   }
+   .text-right {
+     text-align: right;
+   }
+   input,textarea {
+    display: block;
+    margin: .25em 0;
+    width: 90%;
+    margin: 0 auto;
+   }
+   textarea {
+    height:150px;
+   }
+  </style>
+ <body>
+  <div>
+    <label for="填寫類別">填寫類別</label>
+    <input id="ga_Cate" type="text" name="填寫類別" placeholder="填寫類別">
+
+    <label for="填寫動作">填寫動作</label>
+    <input id="ga_Action" type="text" name="填寫動作" placeholder="填寫動作">
+
+    <label for="填寫標籤">填寫標籤</label>
+    <input id="ga_Label" type="text" name="填寫標籤" placeholder="填寫標籤">
+
+    <label for="填寫價值">填寫價值</label>
+    <input id="ga_Value" type="phone" name="填寫價值" placeholder="填寫價值">
+    <div class="text-right">
+    <button type="submit" id="ga_Create" class="pure-button pure-button-primary">產生 ga event</button>
+    </div>
+    <div class="input_container" style="display:none;">
+      請複製貼上html內 : 
+    <input id="ga_Input" />
+      請複製貼上 <／body>上方 : (記得替換掉 idName ) 
+    <textarea id="ga_Input2" row="5"/></textarea>
+</div>
+
+<script>
+
+document.querySelector('#ga_Create').addEventListener('click',function(e){
+  var cate = '';
+  var act = '';
+  var label = '';
+  var val = '';
+
+  if(document.querySelector('#ga_Cate').value == ''){
+    alert('請填寫類別');
+    return;
+  }else{
+    cate = document.querySelector('#ga_Cate').value;
+  }
+  if(document.querySelector('#ga_Action').value == ''){
+    alert('請填寫動作');
+    return;
+  }else {
+    act = document.querySelector('#ga_Action').value;
+  }
+
+  if(document.querySelector('#ga_Label').value !== ''){
+    label = document.querySelector('#ga_Label').value;
+  }
+
+  if(document.querySelector('#ga_Value').value !== ''){
+    val = document.querySelector('#ga_Value').value;
+  }
+
+  var str = `onclick="ga('send', 'event', ${cate},${act}, ${label}, ${val});"`;
+  var str2 =`
+  document.querySelector('#idName').addEventListener('click',function(e){
+    ga('send', 'event', ${cate},${act}, ${label}, ${val});"
+  });
+  `;
+
+  document.querySelector('#ga_Input').value = str;
+  document.querySelector('#ga_Input2').value = '<script'+'>' + str2 + '<'+'/script>';
+
+  document.querySelector('.input_container').style.display= 'block';
+
+  
+  
+});
+
+
+</script>
+ </body>
+ </html>
