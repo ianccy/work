@@ -1,3 +1,4 @@
+這邊是 HTML+ CSS + Javascript 
 ````
 <!DOCTYPE html>
 <html lang="zh-tw">
@@ -170,6 +171,8 @@
 </body>
 </html>
 ````
+
+這邊是google Appscript 的寫法 記得要部署公開 deploy  才能被外部使用
 
 
 ````
