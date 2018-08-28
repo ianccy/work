@@ -99,7 +99,7 @@ document.querySelector('#ga_Create').addEventListener('click',function(e){
     ga('send', 'event', ${cate},${act}, ${label}, ${val});
   });
   `;
-
+  ga('send', 'event', 'Tool' ,'use tool', 'event generate');
   document.querySelector('#ga_Input').value = str;
   document.querySelector('#ga_Input2').value = '<script'+'>' + str2 + '<'+'/script>';
   
