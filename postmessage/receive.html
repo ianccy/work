@@ -42,6 +42,9 @@
     <script>
         window.addEventListener("message", getMessage, false);
         function getMessage(e) {
+          if(e.data.id === 'patterns' || e.data.id === 'js'){
+            return
+          }
           var content = '';
           content += "Get Message =>" + e.data + '<br>';
           content += "Url from " + e.origin;

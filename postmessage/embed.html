@@ -24,12 +24,12 @@
       <div class="site-wrapper-inner">
         <div class="cover-container">
           <div class="inner cover">
-            <h1 class="cover-heading">I will print message.</h1>
+            <h1 class="cover-heading" style="color: #000">It will resize after Click Button.</h1>
             <p class="lead">
               <h2 id="response"></h2>
             </p>
-            <div class="input-group-append">
-              <button id="postWindow" class="btn btn-info btn-outline-secondary" type="button">修正iframe高度</button>
+            <div style="text-align: center;">
+              <button id="postWindow" class="btn btn-info btn-outline-secondary" type="button">伸縮iframe高度</button>
             </div>
           </div>
         </div>
@@ -41,6 +41,13 @@
         });
         function sendMsg() {
           var height = document.body.scrollHeight;
+          if(height === 150) {
+              height = 500;
+              document.body.style.height = height + 'px';
+          } else {
+              height = 150;
+              document.body.style.height = height + 'px'; 
+          }
           window.parent.postMessage(
               {
                   event_id: 'my_cors_message',
