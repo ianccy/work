@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>comments board 留言板</title>
+  <meta property="og:title" content="comments board 留言板">
+  <meta name="description" content="comment board 留言板 build by mongoDB node.js express。">
+  <meta property="og:description" content="comment board 留言板 build by mongoDB node.js express。">
+  <meta property="og:url" content="https://ianchuu.com/work/commentboard">
+  <meta property="og:image" content="https://ianchuu.com/work/images/comment.png">
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+  <style>a,a:focus,a:hover{color:#fff}.btn-default,.btn-default:focus,.btn-default:hover{color:#333;text-shadow:none;background-color:#fff;border:1px solid #fff}body,html{height:100%;background-color:#333}body{color:#fff;text-align:center;text-shadow:0 1px 3px rgba(0,0,0,.5)}.site-wrapper{display:table;width:100%;height:100%;min-height:100%;-webkit-box-shadow:inset 0 0 100px rgba(0,0,0,.5);box-shadow:inset 0 0 100px rgba(0,0,0,.5)}.site-wrapper-inner{display:table-cell;vertical-align:top}.cover-container{margin-right:auto;margin-left:auto}.inner{padding:30px}.masthead-brand{margin-top:10px;margin-bottom:10px}.masthead-nav>li{display:inline-block}.masthead-nav>li+li{margin-left:20px}.masthead-nav>li>a{padding-right:0;padding-left:0;font-size:16px;font-weight:700;color:#fff;color:rgba(255,255,255,.75);border-bottom:2px solid transparent}.masthead-nav>li>a:focus,.masthead-nav>li>a:hover{background-color:transparent;border-bottom-color:#a9a9a9;border-bottom-color:rgba(255,255,255,.25)}.masthead-nav>.active>a,.masthead-nav>.active>a:focus,.masthead-nav>.active>a:hover{color:#fff;border-bottom-color:#fff}.cover{padding:0 20px}.cover .btn-lg{padding:10px 20px;font-weight:700}.mastfoot{color:#999;color:rgba(255,255,255,.5)}@media (min-width:768px){.masthead-brand{float:left}.masthead-nav{float:right}.masthead{position:fixed;top:0}.mastfoot{position:fixed;bottom:0}.site-wrapper-inner{vertical-align:middle}.cover-container,.mastfoot,.masthead{width:100%}}@media (min-width:992px){.cover-container,.mastfoot,.masthead{width:700px}}
+    .btn-outline-secondary {
+        background-color: #ff123d;
+        color: white;
+    }
+    </style>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WGLRPVD');</script>
+  <!-- End Google Tag Manager -->
+</head>
+<style>
+      h1.cover-heading {
+          margin: 30px;
+      }
+      h1.cover-heading::after {
+          content: '';
+          display: block;
+          background: #a5a5a5;
+          width: 40%;
+          height: 3px;
+          margin: 10px auto;
+      }
+      .card {
+          background-color: #585858;
+          border: 1px solid rgba(0, 0, 0, 0.51);
+          margin-bottom: 15px;
+      }
+      .card-header {
+          background-color: rgba(0, 0, 0, 0.18);
+      }
+      .modal-title {
+          color: #615454;
+      }
+      #modalName.show {
+          display: block; 
+          padding-right: 15px;
+      }
+      .comment-footer {
+          text-align: right;
+          margin-top: 15px;
+      }
+      #submitComment {
+          padding: 5px 50px;
+      }
+      .card-header {
+        text-align: left;
+        position: relative;
+      }
+      .timer {
+        text-align: right;
+      }
+      .remove-comment {
+          padding: 5px;
+          position: absolute;
+          right: 5px;
+          top: 5px;
+          font-size: 20px;
+          cursor: pointer;
+      }
+      .remove-comment:hover {
+          color: #c5b4b494;
+      }
+      footer {
+          padding: 10px;
+          margin-bottom: 25px;
+      }
+  </style>
+
+<body>
+  <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+      <div class="cover-container">
+        <div class="inner cover">
+          <h1 class="cover-heading">留言板 - Comment board</h1>
+
+          <div class="card">
+            <div class="card-header">
+              <span id="userName"></span> - 請留言吧!!
+            </div>
+            <div class="card-body">
+              <textarea class="form-control" id="commentValue" aria-label="With textarea"></textarea>
+              <div class="comment-footer">
+                <button type="button" id="submitComment" class="btn btn-secondary">送出</button>
+              </div>
+            </div>
+          </div>
+          <div id="commentBoard">
+
+          </div>
+          <footer>
+            <a href="https://ianchuu.com/2018/10/11/nodejsapi/index.html">API build Tutorial</a>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop fade show" id="modalCover" style="display: none;"></div>
+  <div class="modal fade show" id="modalName" tabindex="-1" role="dialog" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">請先輸入你的暱稱</h5>
+        </div>
+        <div class="modal-body">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">@</span>
+            </div>
+            <input type="text" id="nameInput" class="form-control" placeholder="Username" aria-label="Username"
+              aria-describedby="basic-addon1">
+          </div>
+          <label for="basic-url">後續留言會使用</label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="saveName" class="btn btn-primary">儲存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const userName = localStorage.getItem('name');
+    const NAME_LIST = [];
+    if (!userName) {
+      document.querySelector('#modalName').style.display = 'block';
+      document.querySelector('#modalCover').style.display = 'block';
+    } else {
+      document.querySelector('#userName').innerHTML = userName;
+    }
+    document.querySelector('#saveName').addEventListener('click', function (e) {
+      const name = document.querySelector('#nameInput').value;
+      if (NAME_LIST.indexOf(name) !== -1) {
+        alert('這個名字已被使用了，換一個吧');
+        return;
+      }
+      localStorage.setItem('name', name);
+      document.querySelector('#modalCover').style.display = 'none';
+      document.querySelector('#modalName').style.display = 'none';
+      const userName = localStorage.getItem('name');
+      document.querySelector('#userName').innerHTML = userName;
+    });
+    document.querySelector('#submitComment').addEventListener('click', function (e) {
+      const commentValue = document.querySelector('#commentValue').value;
+      if (commentValue) {
+        addComment();
+      }
+    });
+    createView();
+    function createCard({ _id, content, name, time }) {
+      const splitTime = `${time.split('-')[0]} - ${time.split('-')[1]}`;
+      let deletIcon = '';
+      if (name === localStorage.getItem('name')) {
+        deletIcon = `<span class="remove-comment" onclick="delectComment('${_id}')" aria-hidden="true">×</span>`;
+      }
+      return (
+        `<div class="card" id="${_id}">
+        <div class="card-header">
+          ${name}
+          ${deletIcon}
+        </div>
+        <div class="card-body">
+          <p class="card-text">${content}</p>
+          <p class="card-text timer">${splitTime}</p>
+        </div>
+      </div>`
+      )
+    }
+    async function addComment() {
+      const data = await sendData();
+      const { _id, name, time, content } = data;
+      const contents = createCard({ _id, name, time, content });
+      const commentBoard = document.getElementById("commentBoard");
+      const newNode = document.createElement("div");
+      newNode.innerHTML = contents;
+      commentBoard.insertBefore(newNode, commentBoard.childNodes[0]);
+      document.querySelector('#commentValue').value = '';
+    }
+    async function delectComment(id) {
+      const data = await deleteData(id);
+      if (data === 'done') {
+        document.getElementById(id).outerHTML = "";;
+        alert('delete success');
+      }
+    }
+    async function createView() {
+      const { data } = await getData();
+      let content = '';
+      for (let i = data.length; i > 0; i--) {
+        const elem = data[i - 1];
+        const { name } = elem;
+        if (NAME_LIST.indexOf(name) === -1) {
+          NAME_LIST.push(name);
+        }
+        content += createCard(elem);
+      }
+      document.querySelector('#commentBoard').innerHTML = content;
+    }
+    function getData() {
+      return new Promise((resolve, reject) => {
+        fetch('https://thawing-stream-74537.herokuapp.com/comments')
+          .then(function (response) {
+            return response.json()
+          }).then(function (response) {
+            resolve(response);
+          }).catch(function (err) {
+            reject(JSON.stringify(err));
+          });
+      });
+    }
+    function sendData() {
+      const name = localStorage.getItem('name') || '匿名';
+      const content = document.querySelector('#commentValue').value;
+      const date = new Date();
+      const time = `${date.toLocaleDateString()}-${date.toTimeString().split(' ')[0]}`
+      const option = {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          content,
+          time
+        })
+      };
+      return new Promise((resolve, reject) => {
+        fetch('https://thawing-stream-74537.herokuapp.com/comments', option)
+          .then(function (response) {
+            return response.json()
+          }).then(function (response) {
+            resolve(response);
+          }).catch(function (err) {
+            reject(JSON.stringify(err));
+          });
+      });
+    }
+    function deleteData(id) {
+      const option = {
+        method: 'delete',
+      };
+      return new Promise((resolve, reject) => {
+        fetch(`https://thawing-stream-74537.herokuapp.com/comments/${id}`, option)
+          .then(function (response) {
+            resolve(response.status === 200 ? 'done' : false);
+          }).catch(function (err) {
+            reject(JSON.stringify(err));
+          });
+      });
+    }
+  </script>
+</body>
+
+</html>
