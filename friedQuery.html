@@ -118,7 +118,7 @@ ga('create','UA-111039507-1','auto');ga('send','pageview');</script>
     function handleData(response){
         var content = '';
         response.forEach(element => {
-          var [name, phone, time, item,, price, status] = element.data;
+          var [name, phone, time, item, price,, status] = element.data;
           var index = element.index;
           var statusWording = convertStatus(status);
           content +=
