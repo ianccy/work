@@ -15,9 +15,10 @@
       });
         
       FB.AppEvents.logPageView();   
-        
     };
-  
+    FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+    });
     (function(d, s, id){
        var js, fjs = d.getElementsByTagName(s)[0];
        if (d.getElementById(id)) {return;}
@@ -30,9 +31,6 @@
 <body>
   <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
 <script>
-FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-});
 function statusChangeCallback(data){
   console.log(data);
 }
