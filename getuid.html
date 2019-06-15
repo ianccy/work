@@ -14,7 +14,11 @@
             xfbml: true
         });
         FB.getLoginStatus(function(response) {
-            document.getElementById()
+            if (response.status === 'connected') {
+                toggleButton(true);
+            } else {
+              toggleButton(false);
+            }
         });
     };
 
@@ -30,8 +34,6 @@
     function login() {
         FB.login(function(response) {
 
-        // handle the response
-        console.log("Response goes here!");
         statusChangeCallback(response);
         toggleButton(true);
         });            
