@@ -26,14 +26,25 @@
        fjs.parentNode.insertBefore(js, fjs);
      }(document, 'script', 'facebook-jssdk'));
   </script>
+  <style>
+  #logout {
+    width: 171px;
+    height: 40px;
+    background: #4267b2;
+    color: #fff;
+    border-radius: 5px;
+    display: none;
+  }
+  </style>
 </head>
 <body>
   登入即可獲取User Id。
-  <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="true" data-use-continue-as="false"></div>
-  <button id="logout">點擊清除User Id</button>
+  <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+  <button id="logout">Logout</button>
 <script>
 function statusChangeCallback({authResponse : { userID = '' }}){
   if(userID){
+    document.getElementById('logout').style.display = 'block';
     window.localStorage.setItem('userId', userID);
   }
 }
