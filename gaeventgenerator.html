@@ -1,23 +1,42 @@
- <!DOCTYPE html>
- <html lang="en">
- <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-   <title>ga event 事件產生器 </title>
-   <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
-   <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css">
-   <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-   <!-- Bootstrap core CSS -->
-   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-   <script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create','UA-111039507-1','auto');ga('send','pageview');</script>
- </head>
- <style>
-   div {
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>ga event事件產生器 - GA Event Generator</title>
+  <meta property="og:title" content="ga event事件產生器 - GA Event Generator">
+  <meta name="description" content="ga 事件產生器，快速產生ga event，不用讓你寫程式碼。">
+  <meta property="og:description" content="ga 事件產生器，快速產生ga event，不用讓你寫程式碼。">
+  <meta property="og:url" content="https://ianchuu.com/work/gaeventgenerator.html">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Ian Chu">
+  <meta content="https://www.facebook.com/chu1228/" property="article:author">
+  <meta property="og:image" content="https://ianchuu.com/images/logo.png">
+  <link rel="Shortcut Icon" type="image/x-icon" href="https://ianchuu.com/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/pure-min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/pure/1.0.0/grids-responsive-min.css">
+  <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+  <script>(function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+    ga('create', 'UA-111039507-1', 'auto'); ga('send', 'pageview');</script>
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({
+          google_ad_client: "ca-pub-8378986291968146",
+          enable_page_level_ads: true
+     });
+</script>
+</head>
+<style>
+  div {
      padding: 10px;
    }
    .text-right {
@@ -35,77 +54,115 @@
    h1{
      font-size:19px;
    }
-
-  </style>
- <body>
-  <div class="container">
-    <h1>Google Analytics 事件產生器</h1>
-    <label for="填寫類別">類別</label>
-    <input id="ga_Cate" type="text" name="填寫類別" placeholder="填寫類別">
-
-    <label for="填寫動作">動作</label>
-    <input id="ga_Action" type="text" name="填寫動作" placeholder="填寫動作">
-
-    <label for="填寫標籤">標籤</label>
-    <input id="ga_Label" type="text" name="填寫標籤" placeholder="填寫標籤">
-
-    <label for="填寫價值">價值 - 僅能填數字</label>
-    <input id="ga_Value" type="phone" name="填寫價值" placeholder="填寫價值" onkeypress="return isNumberKey(event);">
-    <div class="text-right">
-    <button type="submit" id="ga_Create" class="pure-button pure-button-primary">產生 ga event</button>
-    </div>
-    <div class="input_container">
-      請複製貼上html內 : 
-    <input id="ga_Input" />
-      請複製貼上 <／body>上方 : (記得替換掉 idName ) 
-    <textarea id="ga_Input2" row="5"/></textarea>
-</div>
-
-<script>
-function isNumberKey(evt){
-    var charCode = (evt.which) ? evt.which : evt.keyCode
-    return !(charCode > 31 && (charCode < 48 || charCode > 57));
+   .content {
+      width: 600px;
+      margin: 0 auto;
+   }
+   .pure-button {
+    background-color: #1f8dd6;
+    color: white;
+    padding: 0.5em 2em;
+    border-radius: 5px;
 }
-document.querySelector('#ga_Create').addEventListener('click',function(e){
-  var cate = '';
-  var act = '';
-  var label = '';
-  var val = '';
+.pure-form input[type],.pure-form textarea {
+    border: 2px solid #ddd;
+    box-shadow: none;
+    font-size: 100%;
+    width: 100%;
+    margin-bottom: 1em;
+}
+footer {
+  text-align: center;
+}
+@media screen and (max-width: 1280px) {
+  .content {
+      width: 400px;
+   }
+}
+@media screen and (max-width: 768px) {
+  .content {
+      width: 100%;
+   }
+}
+  </style>
 
-  if(document.querySelector('#ga_Cate').value == ''){
-    alert('請填寫類別');
-    return;
-  }else{
-    cate = "'"+document.querySelector('#ga_Cate').value+"'";
-  }
-  if(document.querySelector('#ga_Action').value == ''){
-    alert('請填寫動作');
-    return;
-  }else {
-    act = "'"+document.querySelector('#ga_Action').value +"'";
-  }
+<body>
+  <div class="container">
+    <div class="content pure-form">
+      <h1>Google Analytics 事件產生器</h1>
+      <label for="填寫類別">*類別</label>
+      <input id="ga_Cate" type="text" name="填寫類別" placeholder="填寫類別">
 
-  if(document.querySelector('#ga_Label').value !== ''){
-    label = "'"+document.querySelector('#ga_Label').value +"'";
-  }
+      <label for="填寫動作">*動作</label>
+      <input id="ga_Action" type="text" name="填寫動作" placeholder="填寫動作">
 
-  if(document.querySelector('#ga_Value').value !== ''){
-    val = document.querySelector('#ga_Value').value;
-  }
+      <label for="填寫標籤">標籤</label>
+      <input id="ga_Label" type="text" name="填寫標籤" placeholder="填寫標籤">
 
-  var str = `onclick="ga('send', 'event', ${cate},${act}, ${label}, ${val});"`;
-  var str2 =`
+      <label for="填寫價值">價值 - 僅能填數字</label>
+      <input id="ga_Value" type="phone" name="填寫價值" placeholder="填寫價值" onkeypress="return isNumberKey(event);">
+      <div class="text-right">
+        <button type="submit" id="ga_Create" class="pure-button pure-button-primary">產生 ga event</button>
+      </div>
+      <div class="input_container">
+        請複製貼上html內 :
+        <input type="text" id="ga_Input" />
+        請複製貼上 &#60;/body> 上方 : (記得替換掉 idName )
+        <textarea id="ga_Input2" row="5" /></textarea>
+      </div>
+    </div>
+  </div>
+  <footer>
+    歡迎回來瀏覽 ian blog <a href="https://ianchuu.com/categories/marketing/?utm_source=work%20tool&utm_medium=link&utm_campaign=marketing"
+      target="_blank">行銷類文章</a>
+  </footer>
+  <script>
+    function isNumberKey(evt) {
+      var charCode = (evt.which) ? evt.which : evt.keyCode
+      return !(charCode > 31 && (charCode < 48 || charCode > 57));
+    }
+    document.querySelector('#ga_Create').addEventListener('click', function (e) {
+      var cate = '';
+      var act = '';
+      var label = '';
+      var val = '';
+      var ga_Cate = document.querySelector('#ga_Cate').value;
+      var ga_Action = document.querySelector('#ga_Action').value;
+      var ga_Label = document.querySelector('#ga_Label').value;
+      var ga_Value = document.querySelector('#ga_Value').value;
+      if (ga_Cate == '') {
+        alert('請填寫類別');
+        return;
+      } else {
+        cate = "'" + ga_Cate + "'";
+      }
+      if (ga_Action == '') {
+        alert('請填寫動作');
+        return;
+      } else {
+        act = ",'" + ga_Action + "'";
+      }
+
+      if (ga_Label !== '') {
+        label = ",'" + ga_Label + "'";
+      }
+
+      if (ga_Value !== '') {
+        val = (label == '' ? ",''" : '') + "," + ga_Value;
+      }
+
+      var str = `onclick="ga('send', 'event', ${cate}${act}${label}${val})"`;
+      var str2 = `
   document.querySelector('#idName').addEventListener('click',function(e){
-    ga('send', 'event', ${cate},${act}, ${label}, ${val});
-  });
+    ga('send', 'event', ${cate}${act}${label}${val});
+  })
   `;
-  ga('send', 'event', 'Tool' ,'use tool', 'event generate');
-  document.querySelector('#ga_Input').value = str;
-  document.querySelector('#ga_Input2').value = '<script'+'>' + str2 + '<'+'/script>';
-  
-});
+      ga('send', 'event', 'Tool', 'use tool', 'event generate');
+      document.querySelector('#ga_Input').value = str;
+      document.querySelector('#ga_Input2').value = '<script' + '>' + str2 + '<' + '/script>';
 
+    });
+  </script>
+</body>
 
-</script>
- </body>
- </html>
+</html>
