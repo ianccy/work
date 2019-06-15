@@ -77,8 +77,6 @@
   <script>
   function statusChangeCallback({authResponse : { userID = '' }}){
     if(userID){
-      document.getElementById('logout').style.display = 'block';
-      document.getElementsByClassName('fb-login-button')[0].style.display = 'none';
       window.localStorage.setItem('userId', userID);
     }
   }
