@@ -17,7 +17,7 @@
             if (response.status === 'connected') {
                 toggleButton(true);
             } else {
-              toggleButton(false);
+                toggleButton(false);
             }
         });
     };
@@ -41,7 +41,7 @@
 
     function logout() {
         FB.logout(function(response) {
-            window.localStorage.removeItem('userId');
+            removeCookie('userId');
             toggleButton(false);
         });
     }
@@ -70,16 +70,31 @@
   </style>
 </head>
 <body>
-  登入即可獲取User Id。(setting by localStorage)
-  放心，登出即可刪除。
+  <div>
+    登入即可獲取User Id。 (setting by cookie)<br/>
+    放心，登出即可刪除。<br/>
+    一天後也會自動刪除
+  </div>
   <button class="fbaccount" id="login" onclick="login();">Login Facebook</button>
   <br>
   <button class="fbaccount" id="logout" onclick="logout();">Logout from Facebook</button>
   <script>
   function statusChangeCallback({authResponse : { userID = '' }}){
     if(userID){
-      window.localStorage.setItem('userId', userID);
+        setCookie('userId',userID,1);
     }
+  }
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+  function removeCookie(cname) {
+    var d = new Date();
+    d.setTime(d.getTime() - 1000);
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=;" + expires + ";path=/";
   }
   </script>
 </body>
