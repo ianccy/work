@@ -28,11 +28,20 @@
   </script>
 </head>
 <body>
-  <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+  登入即可獲取User Id。
+  <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="true" data-use-continue-as="false"></div>
+  <button id="logout">點擊清除User Id</button>
 <script>
-function statusChangeCallback(data){
-  console.log(data);
+function statusChangeCallback({authResponse : { userID = '' }}){
+  if(userID){
+    window.localStorage.setItem('userId', userID);
+  }
 }
+document.getElementById('logout').addEventListener('click', function(){
+  FB.logout(function(response) {
+      window.localStorage.removeItem('userId');
+  });
+});
 </script>
 </body>
 </html>
