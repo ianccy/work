@@ -16,6 +16,11 @@
       FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
       });
+      document.getElementById('logout').addEventListener('click', function(){
+        FB.logout(function(response) {
+            window.localStorage.removeItem('userId');
+        });
+      });
       FB.AppEvents.logPageView();   
     };
     (function(d, s, id){
@@ -45,14 +50,10 @@
 function statusChangeCallback({authResponse : { userID = '' }}){
   if(userID){
     document.getElementById('logout').style.display = 'block';
+    document.getElementById('fb-login-button').style.display = 'block';
     window.localStorage.setItem('userId', userID);
   }
 }
-document.getElementById('logout').addEventListener('click', function(){
-  FB.logout(function(response) {
-      window.localStorage.removeItem('userId');
-  });
-});
 </script>
 </body>
 </html>
