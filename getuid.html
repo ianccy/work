@@ -6,24 +6,60 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Get User Id</title>
   <script>
-    window.fbAsyncInit = function() {
-      FB.init({
-        appId      : '332556740572935',
-        cookie     : true,
-        xfbml      : true,
-        version    : 'v3.3'
-      });
-      FB.getLoginStatus(function(response) {
-        statusChangeCallback(response);
-      });
-      document.getElementById('logout').addEventListener('click', function(){
-        FB.logout(function(response) {
-            window.localStorage.removeItem('userId');
-        });
-      });
-      FB.AppEvents.logPageView();   
-    };
-    (function(d, s, id){
+        window.fbAsyncInit = function() {
+                FB.init({
+                appId: '332556740572935',
+                status: true,
+                cookie: true,
+                xfbml: true
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function(d){
+        var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+        }(document));
+
+        function login() {
+            FB.login(function(response) {
+
+            // handle the response
+            console.log("Response goes here!");
+
+            });            
+        }
+
+        function logout() {
+            FB.logout(function(response) {
+              // user is now logged out
+            });
+        }
+
+        var status = FB.getLoginStatus();
+
+        console.log(status);
+    // window.fbAsyncInit = function() {
+    //   FB.init({
+    //     appId      : '332556740572935',
+    //     cookie     : true,
+    //     xfbml      : true,
+    //     version    : 'v3.3'
+    //   });
+    //   FB.getLoginStatus(function(response) {
+    //     statusChangeCallback(response);
+    //   });
+    //   document.getElementById('logout').addEventListener('click', function(){
+    //     FB.logout(function(response) {
+    //         window.localStorage.removeItem('userId');
+    //     });
+    //   });
+    //   FB.AppEvents.logPageView();   
+    // };
+    // (function(d, s, id){
        var js, fjs = d.getElementsByTagName(s)[0];
        if (d.getElementById(id)) {return;}
        js = d.createElement(s); js.id = id;
@@ -44,13 +80,18 @@
 </head>
 <body>
   登入即可獲取User Id。
+  <button onclick="javascript:login();">Login Facebook</button>
+
+  <br>
+
+  <button onclick="javascript:logout();">Logout from Facebook</button>
   <div class="fb-login-button" data-width="" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
   <button id="logout">Logout</button>
 <script>
 function statusChangeCallback({authResponse : { userID = '' }}){
   if(userID){
     document.getElementById('logout').style.display = 'block';
-    document.getElementById('fb-login-button').style.display = 'block';
+    document.getElementsByClassName('fb-login-button')[0].style.display = 'none';
     window.localStorage.setItem('userId', userID);
   }
 }
