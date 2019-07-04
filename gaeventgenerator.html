@@ -27,66 +27,105 @@
         m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
     })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
     ga('create', 'UA-111039507-1', 'auto'); ga('send', 'pageview');</script>
-<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({
-          google_ad_client: "ca-pub-8378986291968146",
-          enable_page_level_ads: true
-     });
-</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 <style>
+  .container {
+    position: relative;
+  }
+
   div {
-     padding: 10px;
-   }
-   .text-right {
-     text-align: right;
-   }
-   input,textarea {
+    padding: 10px;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  input,
+  textarea {
     display: block;
     margin: .25em 0;
     width: 90%;
     margin: 0 auto;
-   }
-   textarea {
-    height:130px;
-   }
-   h1{
-     font-size:19px;
-   }
-   .content {
-      width: 600px;
-      margin: 0 auto;
-   }
-   .pure-button {
+    color: #000;
+  }
+
+  textarea {
+    height: 130px;
+  }
+
+  h1 {
+    font-size: 19px;
+  }
+
+  .content {
+    width: 600px;
+    margin: 0 auto;
+    background: rgba(148, 118, 118, 0.42);
+    color: #fff;
+  }
+
+  .pure-button {
     background-color: #1f8dd6;
     color: white;
     padding: 0.5em 2em;
     border-radius: 5px;
-}
-.pure-form input[type],.pure-form textarea {
+  }
+
+  .pure-form input[type],
+  .pure-form textarea {
     border: 2px solid #ddd;
     box-shadow: none;
     font-size: 100%;
     width: 100%;
     margin-bottom: 1em;
-}
-footer {
-  text-align: center;
-}
-@media screen and (max-width: 1280px) {
-  .content {
+  }
+
+  footer {
+    text-align: center;
+  }
+
+  #particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #232741;
+    background-image: url("");
+    background-repeat: no-repeat;
+    background-size: 20%;
+    background-position: 50% 50%;
+  }
+
+  input:focus,
+  input[type="phone"]:focus,
+  input[type="text"]:focus,
+  input[type="number"]:focus,
+  textarea:focus {
+    border-color: #2491eb;
+    outline: 1px solid #2491eb;
+  }
+
+  #ga_Create:focus {
+    outline: none;
+  }
+
+  @media screen and (max-width: 1280px) {
+    .content {
       width: 400px;
-   }
-}
-@media screen and (max-width: 768px) {
-  .content {
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .content {
       width: 100%;
-   }
-}
-  </style>
+    }
+  }
+</style>
 
 <body>
+  <div id="particles-js">
+  </div>
   <div class="container">
     <div class="content pure-form">
       <h1>Google Analytics 事件產生器</h1>
@@ -104,6 +143,9 @@ footer {
       <div class="text-right">
         <button type="submit" id="ga_Create" class="pure-button pure-button-primary">產生 ga event</button>
       </div>
+      <!-- ga_generator -->
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8378986291968146" data-ad-slot="1326172381"
+        data-ad-format="auto" data-full-width-responsive="true"></ins>
       <div class="input_container">
         請複製貼上html內 :
         <input type="text" id="ga_Input" />
@@ -112,10 +154,14 @@ footer {
       </div>
     </div>
   </div>
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8378986291968146" data-ad-slot="8170195601"
+    data-ad-format="auto" data-full-width-responsive="true"></ins>
   <footer>
-    歡迎回來瀏覽 ian blog <a href="https://ianchuu.com/categories/marketing/?utm_source=work%20tool&utm_medium=link&utm_campaign=marketing"
+    歡迎回來瀏覽 ian blog <a
+      href="https://ianchuu.com/categories/marketing/?utm_source=work%20tool&utm_medium=link&utm_campaign=marketing"
       target="_blank">行銷類文章</a>
   </footer>
+
   <script>
     function isNumberKey(evt) {
       var charCode = (evt.which) ? evt.which : evt.keyCode
@@ -130,17 +176,22 @@ footer {
       var ga_Action = document.querySelector('#ga_Action').value;
       var ga_Label = document.querySelector('#ga_Label').value;
       var ga_Value = document.querySelector('#ga_Value').value;
+
+      var wording = '';
       if (ga_Cate == '') {
-        alert('請填寫類別');
-        return;
+        wording += '類別 ';
       } else {
         cate = "'" + ga_Cate + "'";
       }
       if (ga_Action == '') {
-        alert('請填寫動作');
-        return;
+        wording += '動作 ';
       } else {
         act = ",'" + ga_Action + "'";
+      }
+
+      if (wording) {
+        alert('請填寫 ' + wording);
+        return;
       }
 
       if (ga_Label !== '') {
@@ -153,7 +204,7 @@ footer {
 
       var str = `onclick="ga('send', 'event', ${cate}${act}${label}${val})"`;
       var str2 = `
-  document.querySelector('#idName').addEventListener('click',function(e){
+  document.getElementById('#idName').addEventListener('click',function(e){
     ga('send', 'event', ${cate}${act}${label}${val});
   })
   `;
@@ -162,6 +213,123 @@ footer {
       document.querySelector('#ga_Input2').value = '<script' + '>' + str2 + '<' + '/script>';
 
     });
+  </script>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    var config = {
+      "particles": {
+        "number": {
+          "value": 199,
+          "density": {
+            "enable": true,
+            "value_area": 800
+          }
+        },
+        "color": {
+          "value": "#ffffff"
+        },
+        "shape": {
+          "type": "circle",
+          "stroke": {
+            "width": 0,
+            "color": "#000000"
+          },
+          "polygon": {
+            "nb_sides": 5
+          },
+          "image": {
+            "src": "img/github.svg",
+            "width": 100,
+            "height": 100
+          }
+        },
+        "opacity": {
+          "value": 1,
+          "random": true,
+          "anim": {
+            "enable": true,
+            "speed": 1,
+            "opacity_min": 0,
+            "sync": false
+          }
+        },
+        "size": {
+          "value": 3,
+          "random": true,
+          "anim": {
+            "enable": false,
+            "speed": 4,
+            "size_min": 0.3,
+            "sync": false
+          }
+        },
+        "line_linked": {
+          "enable": false,
+          "distance": 150,
+          "color": "#ffffff",
+          "opacity": 0.4,
+          "width": 1
+        },
+        "move": {
+          "enable": true,
+          "speed": 1,
+          "direction": "none",
+          "random": true,
+          "straight": false,
+          "out_mode": "out",
+          "bounce": false,
+          "attract": {
+            "enable": false,
+            "rotateX": 600,
+            "rotateY": 600
+          }
+        }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": {
+            "enable": true,
+            "mode": "bubble"
+          },
+          "onclick": {
+            "enable": true,
+            "mode": "repulse"
+          },
+          "resize": true
+        },
+        "modes": {
+          "grab": {
+            "distance": 400,
+            "line_linked": {
+              "opacity": 1
+            }
+          },
+          "bubble": {
+            "distance": 250,
+            "size": 0,
+            "duration": 2,
+            "opacity": 0,
+            "speed": 3
+          },
+          "repulse": {
+            "distance": 400,
+            "duration": 0.4
+          },
+          "push": {
+            "particles_nb": 4
+          },
+          "remove": {
+            "particles_nb": 2
+          }
+        }
+      },
+      "retina_detect": true
+    }
+    particlesJS("particles-js", config, function () { })
   </script>
 </body>
 
