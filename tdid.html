@@ -17,6 +17,7 @@
           }
         }
         var oReq = new XMLHttpRequest();
+        oReq.withCredentials = true;
         oReq.onload = reqListener;
         oReq.open(
           "get",
