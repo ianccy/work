@@ -13,7 +13,6 @@
           var data = JSON.parse(this.responseText);
           var TDID = data && data.TDID;
           if (TDID) {
-            dataLayer.push({ event: "get-tdid", tdid: TDID });
             alert(TDID);
           }
         }
