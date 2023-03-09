@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    tdid test
+    <script>
+        function reqListener() {
+          var data = JSON.parse(this.responseText);
+          var TDID = data && data.TDID;
+          if (TDID) {
+            alert(TDID);
+          }
+        }
+        var oReq = new XMLHttpRequest();
+        oReq.withCredentials = true;
+        oReq.onload = reqListener;
+        oReq.open(
+          "get",
+          "https://match.adsrvr.org/track/rid?v=1.0.0&ttd_pid=v2k1fau&fmt=json",
+          true
+        );
+        oReq.send();
+      </script>
+
+</body>
+</html>
