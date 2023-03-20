@@ -97,5 +97,24 @@
     document.cookie = cname + "=;" + expires + ";path=/";
   }
   </script>
+  <script defer src="https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js"></script>
+
+<script defer src="https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js"></script>
+
+<script defer>
+  var firebaseConfig = {
+    apiKey: "AIzaSyC8NAANMq9glAMGWP-xQfQ_NxlzL6De5lg",
+    authDomain: "ndpoint-datalake-dev.firebaseapp.com",
+    projectId: "ndpoint-datalake-dev",
+    storageBucket: "ndpoint-datalake-dev.appspot.com",
+    messagingSenderId: "739389444855",
+    appId: "1:739389444855:web:f9dff278ed8866d57ef9f2",
+    measurementId: "G-28WGSLQ0SB"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  console.log(firebase);
+</script>
 </body>
 </html>
