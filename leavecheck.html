@@ -7,10 +7,14 @@
     <title>Document</title>
   </head>
   <body>
+    <a href="https://www.google.com.tw/">Goto google</a>
     <script>
       window.onbeforeunload = function () {
-        fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=test");
+        fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=onbeforeunload");
       };
+      window.addEventListener("blur", () => {
+        fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=blur");
+      });
     </script>
   </body>
 </html>
