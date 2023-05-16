@@ -10,7 +10,9 @@
     <a href="https://work.ianccy.com/leavecheck2.html">Go.      to google</a>
     <script>
       document.cookie = "username=John Smith; expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/";
-
+var url = new URL(window.location);
+url.searchParams.set('foo', 'bar');
+window.history.replaceState({}, '', url);
 //       window.onbeforeunload = function () {
 //         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=onbeforeunload");
 //            return "Are you sure to leave this page?";
