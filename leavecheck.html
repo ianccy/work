@@ -11,9 +11,11 @@
     <script>
       window.onbeforeunload = function () {
         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=onbeforeunload");
+           return "Are you sure to leave this page?";
       };
       window.addEventListener("blur", () => {
         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=blur");
+               alert('blur');
       });
     </script>
   </body>
