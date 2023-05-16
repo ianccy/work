@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <a href="https://www.google.com.tw/">Go.      to google</a>
+    <script>
+var url = new URL(window.location);
+url.searchParams.set('foo', 'bar');
+window.history.replaceState({}, '', url);
+ alert(document.cookie);
+//       window.onbeforeunload = function () {
+//         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=onbeforeunload");
+//            return "Are you sure to leave this page?";
+//       };
+//       window.addEventListener("blur", () => {
+//         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=blur");
+//                alert('blur');
+//       });
+    </script>
+  </body>
+</html>
