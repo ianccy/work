@@ -8,11 +8,18 @@
   </head>
   <body>
     <a href="https://work.ianccy.com/leavecheck2.html">Go.      to google</a>
+    is in facebook :<span id="label"></span>
     <script>
       document.cookie = "username=John Smith; expires=Thu, 18 Dec 2023 12:00:00 UTC; path=/";
 var url = new URL(window.location);
 url.searchParams.set('foo', 'bar');
 window.history.replaceState({}, '', url);
+      
+function isFacebookApp() {
+    var ua = navigator.userAgent || navigator.vendor || window.opera;
+    return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+}
+document.getElementById('label').textContent = isFacebookApp();
 //       window.onbeforeunload = function () {
 //         fetch("https://queryid-vecxft5f7q-ue.a.run.app/?id=onbeforeunload");
 //            return "Are you sure to leave this page?";
