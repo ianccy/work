@@ -387,7 +387,8 @@ td.name-plain .nm { flex: 1 1 auto; word-break: break-word; overflow-wrap: anywh
   backdrop-filter: blur(10px);
   border-top: 2px solid var(--line-strong);
   box-shadow: 0 -4px 18px rgba(160, 110, 80, .14);
-  padding-bottom: env(safe-area-inset-bottom);
+  /* 沒有 viewport-fit=cover 時 env() 會是 0，所以要有保底值 */
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
 }
 
 .sb-main {
@@ -806,4 +807,32 @@ body.sheet-open {
   right: 0;
   width: 100%;
   overflow: hidden;
+}
+
+/* ==========================================================
+ * 加到主畫面後（standalone）
+ *
+ * 這個模式沒有 Safari 的工具列擋著，頁面直接貼到螢幕邊緣：
+ * 上面被瀏海壓、下面被 Home Indicator 壓，安全區要自己補。
+ * ========================================================== */
+@media (display-mode: standalone), (display-mode: fullscreen) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+
+  header { padding-block: 16px 12px; }
+
+  /* Home Indicator 要再多讓一點，不然手指容易誤觸 */
+  .submitbar { padding-bottom: max(22px, calc(env(safe-area-inset-bottom) + 8px)); }
+
+  .overlay { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+}
+
+@media (display-mode: standalone) and (max-width: 640px) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
 }
