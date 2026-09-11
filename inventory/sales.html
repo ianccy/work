@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>銷貨登錄</title>
+<link rel="icon" href="icons/icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ff9b73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="庫存">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧾 銷貨登錄</h1>
+    <nav>
+      <a href="price.html">價目表</a>
+      <a href="sales.html" aria-current="page">銷貨</a>
+      <a href="history.html">紀錄</a>
+      <a href="stock.html">庫存管理</a>
+    </nav>
+  </header>
+
+  <div id="msg" class="msg" hidden></div>
+
+  <div class="card" id="listCard">
+    <h2>🛒 選擇商品與數量</h2>
+    <div class="row" style="margin-bottom:12px">
+      <div style="flex:2 1 220px"><input id="search" type="search" placeholder="搜尋商品名稱"></div>
+      <div style="flex:0 0 auto"><button type="button" class="ghost" id="refresh">重新載入</button></div>
+    </div>
+    <div class="sortbar">
+      <span class="hint">排序</span>
+      <button type="button" class="ghost" data-sort="name">名稱</button>
+      <button type="button" class="ghost" data-sort="price">售價</button>
+      <button type="button" class="ghost" data-sort="stock">庫存</button>
+    </div>
+    <div class="table-scroll">
+      <table id="table">
+        <thead>
+          <tr>
+            <th style="width:38%">商品</th>
+            <th style="text-align:right; width:80px">售價</th>
+            <th style="text-align:right; width:80px">庫存</th>
+            <th style="width:190px">銷貨數量</th>
+            <th style="text-align:right">小計</th>
+          </tr>
+        </thead>
+        <tbody id="body"><tr><td colspan="5" class="hint">載入中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="recentCard">
+    <h2>🕒 最近 20 筆銷貨</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>時間</th><th>商品</th><th style="text-align:right">數量</th><th>備註</th></tr>
+        </thead>
+        <tbody id="salesBody"><tr><td colspan="4" class="hint">載入中…</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+
+  <div class="submitbar" id="submitbar">
+    <div class="sb-panel" id="sbPanel" hidden>
+      <div class="sb-panel-head">
+        <strong>已選商品</strong>
+        <button type="button" class="link-plain" id="clearAll">清空</button>
+      </div>
+      <div id="cartList" class="hint">還沒選東西，上面挑一挑吧 🐾</div>
+      <label for="note" style="margin-top:12px">備註（選填，套用到本次所有品項）</label>
+      <input id="note" type="text" placeholder="例如：客戶名稱、單號">
+    </div>
+    <div class="sb-main">
+      <button type="button" class="sb-toggle" id="sbToggle" aria-expanded="false">
+        <span class="sb-info">
+          <span class="sb-count" id="sbCount">尚未選擇商品</span>
+          <span class="sb-amount" id="sbAmount">$0</span>
+        </span>
+        <span class="sb-caret" id="sbCaret">▲</span>
+      </button>
+      <button type="button" id="submit" disabled>送出銷貨</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="ov-box" role="status" aria-live="polite">
+    <div class="ov-icon" id="ovIcon"><span class="ov-spin"></span></div>
+    <p class="ov-title" id="ovTitle">登錄中…</p>
+    <p class="ov-sub" id="ovSub">正在寫入試算表，請稍候</p>
+    <div class="ov-detail" id="ovDetail" hidden></div>
+    <button type="button" class="ghost" id="ovClose" hidden>完成</button>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="dialog.js"></script>
+<script>
+var msgEl = document.getElementById('msg');
+var bodyEl = document.getElementById('body');
+var searchEl = document.getElementById('search');
+var cartListEl = document.getElementById('cartList');
+var submitEl = document.getElementById('submit');
+var noteEl = document.getElementById('note');
+var salesBody = document.getElementById('salesBody');
+var submitBar = document.getElementById('submitbar');
+var sbPanel = document.getElementById('sbPanel');
+var sbToggle = document.getElementById('sbToggle');
+var sbCaret = document.getElementById('sbCaret');
+var sheetBackdrop = document.getElementById('sheetBackdrop');
+var lockedScrollY = 0;
+var overlay = document.getElementById('overlay');
+var ovIcon = document.getElementById('ovIcon');
+var ovTitle = document.getElementById('ovTitle');
+var ovSub = document.getElementById('ovSub');
+var ovDetail = document.getElementById('ovDetail');
+var ovClose = document.getElementById('ovClose');
+var ovTimer = null;
+var sbCount = document.getElementById('sbCount');
+var sbAmount = document.getElementById('sbAmount');
+
+var products = [];
+var qty = {};   // productId -> 數量
+var sortBar = document.querySelector('.sortbar');
+var SORT_KEYS = { name: '名稱', price: '售價', stock: '庫存' };
+var savedSort = loadSort('sales', { by: 'name', asc: true });
+var sortBy = SORT_KEYS[savedSort.by] ? savedSort.by : 'name';
+var asc = savedSort.asc;
+var saleReqId = newReqId();   // 成功後才換新的
+
+function IMG_TAG(p) {
+  return '<img src="' + imageSrc(p) + '" alt="" loading="lazy" decoding="async" onerror="imgFallback(this)">';
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function visible() {
+  var q = searchEl.value.trim().toLowerCase();
+  var list = q
+    ? products.filter(function (p) { return p.name.toLowerCase().indexOf(q) >= 0; })
+    : products.slice();
+
+  list.sort(function (a, b) {
+    var d;
+    if (sortBy === 'price' || sortBy === 'stock') d = a[sortBy] - b[sortBy];
+    else d = a.name.localeCompare(b.name, 'zh-Hant');
+    if (d === 0) d = a.name.localeCompare(b.name, 'zh-Hant');
+    return asc ? d : -d;
+  });
+  return list;
+}
+
+function renderSortBar() {
+  sortBar.querySelectorAll('button[data-sort]').forEach(function (b) {
+    var k = b.getAttribute('data-sort');
+    var on = k === sortBy;
+    b.classList.toggle('on', on);
+    b.textContent = SORT_KEYS[k] + (on ? (asc ? ' ↑' : ' ↓') : '');
+  });
+}
+
+sortBar.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-sort]');
+  if (!btn) return;
+  var k = btn.getAttribute('data-sort');
+  if (k === sortBy) asc = !asc;
+  else { sortBy = k; asc = (k === 'name'); }
+  saveSort('sales', sortBy, asc);
+  renderTable();
+});
+
+function renderTable() {
+  renderSortBar();
+  var list = visible();
+  if (!list.length) {
+    bodyEl.innerHTML = '<tr><td colspan="5" class="hint">' +
+      (products.length ? '沒有符合的商品' : '還沒有商品，請先到庫存管理新增') + '</td></tr>';
+    return;
+  }
+  bodyEl.innerHTML = list.map(function (p) {
+    var n = qty[p.id] || 0;
+    var out = p.stock <= 0;
+    return '<tr data-id="' + p.id + '"' + (out ? ' class="low"' : '') + (n > 0 ? ' class="picked"' : '') + '>' +
+      '<td class="name name-plain"><span class="pthumb sm">' + IMG_TAG(p) + '</span>' +
+        '<span class="nm">' + escapeHtml(p.name) + '</span></td>' +
+      '<td class="num" data-label="售價">' + p.price + '</td>' +
+      '<td class="num stock" data-label="庫存">' + p.stock + '</td>' +
+      '<td class="qtycell" data-label="銷貨數量">' + (out ? '<span class="hint">無庫存</span>' :
+        '<div class="stepper">' +
+          '<button type="button" data-act="minus">−</button>' +
+          '<input type="number" min="0" step="1" max="' + p.stock + '" value="' + n + '" data-act="qty">' +
+          '<button type="button" data-act="plus">+</button>' +
+        '</div>') + '</td>' +
+      '<td class="num subtotal" data-label="小計">' + (n > 0 ? (n * p.price) : '<span class="hint">—</span>') + '</td>' +
+    '</tr>';
+  }).join('');
+}
+
+function picked() {
+  return products.filter(function (p) { return (qty[p.id] || 0) > 0; });
+}
+
+function renderCart() {
+  var list = picked();
+  if (!list.length) {
+    cartListEl.className = 'hint';
+    cartListEl.textContent = '還沒選東西，上面挑一挑吧 🐾';
+    submitEl.disabled = true;
+    submitEl.textContent = '送出銷貨';
+    sbCount.textContent = '尚未選擇商品';
+    sbAmount.textContent = '$0';
+    setPanel(false);
+    return;
+  }
+  var totalQty = 0, totalAmt = 0;
+  cartListEl.className = '';
+  cartListEl.innerHTML = '<ul class="cart-list">' + list.map(function (p) {
+    var n = qty[p.id];
+    totalQty += n;
+    totalAmt += n * p.price;
+    // 上半點了捲到該商品，下半可以直接改數量
+    return '<li class="cart-item" data-id="' + p.id + '">' +
+             '<button type="button" class="cart-jump" data-jump="' + p.id + '" title="跳到這個商品">' +
+               '<span class="pthumb sm">' + IMG_TAG(p) + '</span>' +
+               '<span class="nm">' + escapeHtml(p.name) + '</span>' +
+             '</button>' +
+             '<div class="cart-ctrl">' +
+               '<div class="stepper">' +
+                 '<button type="button" data-act="minus">−</button>' +
+                 '<input type="number" min="0" step="1" max="' + p.stock + '" value="' + n + '" data-act="qty">' +
+                 '<button type="button" data-act="plus">+</button>' +
+               '</div>' +
+               '<span class="cq"><b>' + (n * p.price) + '</b></span>' +
+             '</div>' +
+           '</li>';
+  }).join('') + '</ul>';
+  submitEl.disabled = false;
+  submitEl.textContent = '送出銷貨';
+  sbCount.textContent = list.length + ' 項・' + totalQty + ' 件';
+  sbAmount.textContent = '$' + totalAmt;
+}
+
+function setQty(id, n) {
+  var p = products.filter(function (x) { return x.id === id; })[0];
+  if (!p) return;
+  n = Math.floor(Number(n) || 0);
+  if (n < 0) n = 0;
+  if (n > p.stock) {
+    n = p.stock;
+    showMsg(msgEl, p.name + ' 最多只能出 ' + p.stock, 'err');
+  }
+  if (n === 0) delete qty[id]; else qty[id] = n;
+  renderTable();
+  renderCart();
+}
+
+bodyEl.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-act]');
+  if (!btn) return;
+  var id = btn.closest('tr').getAttribute('data-id');
+  var cur = qty[id] || 0;
+  setQty(id, btn.getAttribute('data-act') === 'plus' ? cur + 1 : cur - 1);
+});
+
+bodyEl.addEventListener('change', function (e) {
+  var input = e.target.closest('input[data-act="qty"]');
+  if (!input) return;
+  setQty(input.closest('tr').getAttribute('data-id'), input.value);
+});
+
+var listCard = document.getElementById('listCard');
+var recentCard = document.getElementById('recentCard');
+var productsLoadedOnce = false;
+var salesLoadedOnce = false;
+
+function loadProducts() {
+  return withMask(listCard, apiCall('list'), productsLoadedOnce ? '更新中…' : '載入中…').then(function (list) {
+    productsLoadedOnce = true;
+    products = list;
+    // 清掉已不存在或超過庫存的選取
+    Object.keys(qty).forEach(function (id) {
+      var p = list.filter(function (x) { return x.id === id; })[0];
+      if (!p || p.stock <= 0) delete qty[id];
+      else if (qty[id] > p.stock) qty[id] = p.stock;
+    });
+    renderTable();
+    renderCart();
+  }).catch(function (err) {
+    bodyEl.innerHTML = '<tr><td colspan="5" class="hint">載入失敗：' + escapeHtml(err.message) + '</td></tr>';
+    showMsg(msgEl, err.message, 'err');
+  });
+}
+
+function loadSales() {
+  return withMask(recentCard, apiCall('sales', { limit: 20 }), salesLoadedOnce ? '更新中…' : '載入中…')
+    .then(function (res) {
+    salesLoadedOnce = true;
+    var list = res.items || [];
+    if (!list.length) {
+      salesBody.innerHTML = '<tr><td colspan="4" class="hint">還沒有銷貨紀錄</td></tr>';
+      return;
+    }
+    salesBody.innerHTML = list.map(function (s) {
+      return '<tr><td>' + escapeHtml(s.timestamp) + '</td><td>' + escapeHtml(s.productName) +
+             '</td><td style="text-align:right">' + s.qty + '</td><td>' + escapeHtml(s.note) + '</td></tr>';
+    }).join('');
+  }).catch(function (err) {
+    salesBody.innerHTML = '<tr><td colspan="4" class="hint">載入失敗：' + escapeHtml(err.message) + '</td></tr>';
+  });
+}
+
+/* 送出時蓋一層全螢幕狀態，順便擋住重複點擊 */
+function ovShow(state, title, sub, detail) {
+  clearTimeout(ovTimer);
+  overlay.hidden = false;
+  overlay.className = 'overlay ' + state;
+  ovTitle.textContent = title;
+  ovSub.textContent = sub || '';
+  ovSub.hidden = !sub;
+  ovIcon.innerHTML = state === 'loading' ? '<span class="ov-spin"></span>'
+                   : state === 'ok' ? '<span class="ov-check">✓</span>'
+                   : '<span class="ov-cross">！</span>';
+  if (detail) { ovDetail.innerHTML = detail; ovDetail.hidden = false; }
+  else { ovDetail.hidden = true; }
+  ovClose.hidden = (state === 'loading');
+  ovClose.textContent = state === 'ok' ? '完成' : '知道了';
+  if (state === 'ok') ovTimer = setTimeout(ovHide, 3500);
+}
+
+function ovHide() {
+  clearTimeout(ovTimer);
+  overlay.hidden = true;
+}
+
+ovClose.addEventListener('click', ovHide);
+overlay.addEventListener('click', function (e) {
+  if (e.target === overlay && !overlay.classList.contains('loading')) ovHide();
+});
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && !overlay.hidden && !overlay.classList.contains('loading')) ovHide();
+});
+
+/*
+ * 面板展開時把整頁鎖住。
+ * 用 position:fixed + 負 top 保留捲動位置 —— iOS Safari 對 overflow:hidden
+ * 不一定買單，這是比較可靠的做法。
+ */
+function lockScroll(on) {
+  var body = document.body;
+  if (on) {
+    if (body.classList.contains('sheet-open')) return;
+    lockedScrollY = window.scrollY || window.pageYOffset || 0;
+    body.style.top = '-' + lockedScrollY + 'px';
+    body.classList.add('sheet-open');
+  } else {
+    if (!body.classList.contains('sheet-open')) return;
+    body.classList.remove('sheet-open');
+    body.style.top = '';
+    window.scrollTo(0, lockedScrollY);
+  }
+}
+
+function setPanel(open) {
+  sbPanel.hidden = !open;
+  sheetBackdrop.hidden = !open;
+  sbToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  sbCaret.textContent = open ? '▼' : '▲';
+  lockScroll(open);
+  syncBarSpace();
+}
+
+sheetBackdrop.addEventListener('click', function () { setPanel(false); });
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape' && !sbPanel.hidden) setPanel(false);
+});
+
+/* 底列高度會變，內容要跟著留空間 */
+function syncBarSpace() {
+  document.body.style.paddingBottom = (submitBar.offsetHeight + 16) + 'px';
+}
+
+sbToggle.addEventListener('click', function () {
+  if (!picked().length) return;
+  setPanel(sbPanel.hidden);
+});
+
+document.getElementById('clearAll').addEventListener('click', function () {
+  qty = {};
+  renderTable();
+  renderCart();
+});
+
+/* 面板裡直接調整數量 */
+cartListEl.addEventListener('click', function (e) {
+  var step = e.target.closest('button[data-act]');
+  if (!step) return;
+  var id = step.closest('.cart-item').getAttribute('data-id');
+  var cur = qty[id] || 0;
+  setQty(id, step.getAttribute('data-act') === 'plus' ? cur + 1 : cur - 1);
+});
+
+cartListEl.addEventListener('change', function (e) {
+  var input = e.target.closest('input[data-act="qty"]');
+  if (!input) return;
+  setQty(input.closest('.cart-item').getAttribute('data-id'), input.value);
+});
+
+/* 點已選商品 -> 捲到該列並閃一下 */
+cartListEl.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-jump]');
+  if (!btn) return;
+  var tr = bodyEl.querySelector('tr[data-id="' + btn.getAttribute('data-jump') + '"]');
+  if (!tr) {
+    showMsg(msgEl, '這個商品被搜尋條件篩掉了，清空搜尋再試', 'info');
+    return;
+  }
+  setPanel(false);          // 先解鎖，鎖住時 scrollIntoView 不會動
+  tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  tr.classList.add('flash');
+  setTimeout(function () { tr.classList.remove('flash'); }, 1200);
+});
+
+window.addEventListener('resize', syncBarSpace);
+
+submitEl.addEventListener('click', function () {
+  var list = picked();
+  if (!list.length) return;
+  var items = list.map(function (p) { return p.id + ':' + qty[p.id]; }).join(',');
+  var totalQty = list.reduce(function (a, p) { return a + qty[p.id]; }, 0);
+  var totalAmt = list.reduce(function (a, p) { return a + qty[p.id] * p.price; }, 0);
+
+  submitEl.disabled = true;
+  submitEl.textContent = '送出中…';
+  ovShow('loading', '登錄中…', '正在寫入試算表，請稍候');
+
+  apiCall('batchSale', { reqId: saleReqId, items: items, note: noteEl.value })
+    .then(function (res) {
+      var rows = res.map(function (r) {
+        return '<div class="ov-row"><span>' + escapeHtml(r.name) + '</span>' +
+               '<span>× ' + r.qty + '<b>剩 ' + r.stock + '</b></span></div>';
+      }).join('');
+      ovShow('ok', '已登錄 ' + res.length + ' 項',
+             '共 ' + totalQty + ' 件　金額 $' + totalAmt, rows);
+
+      saleReqId = newReqId();
+      qty = {};
+      noteEl.value = '';
+      setPanel(false);
+      return Promise.all([loadProducts(), loadSales()]);
+    })
+    .catch(function (err) {
+      ovShow('err', '登錄失敗', err.message);
+      showMsg(msgEl, err.message, 'err');
+      renderCart();
+    });
+});
+
+document.getElementById('refresh').addEventListener('click', function () { loadProducts(); loadSales(); });
+searchEl.addEventListener('input', renderTable);
+
+loadProducts();
+loadSales();
+syncBarSpace();
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>價目表</title>
+<link rel="icon" href="icons/icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ff9b73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="庫存">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🏷️ 價目表</h1>
+    <nav>
+      <a href="price.html" aria-current="page">價目表</a>
+      <a href="sales.html">銷貨</a>
+      <a href="history.html">紀錄</a>
+      <a href="stock.html">庫存管理</a>
+    </nav>
+  </header>
+
+  <div id="msg" class="msg" hidden></div>
+
+  <div class="card" id="listCard">
+    <div class="sortbar">
+      <span class="hint">排序</span>
+      <button type="button" class="ghost" data-sort="name">名稱</button>
+      <button type="button" class="ghost" data-sort="price">售價</button>
+    </div>
+    <ul class="pricelist" id="list"><li class="hint">載入中…</li></ul>
+    <p class="hint" id="summary"></p>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="dialog.js"></script>
+<script>
+var msgEl = document.getElementById('msg');
+var listEl = document.getElementById('list');
+var summaryEl = document.getElementById('summary');
+var bar = document.querySelector('.sortbar');
+
+var products = [];
+var saved = loadSort('price', { by: 'name', asc: true });
+var sortBy = saved.by === 'price' ? 'price' : 'name';
+var asc = saved.asc;
+
+function IMG_TAG(p) {
+  return '<img src="' + imageSrc(p) + '" alt="" loading="lazy" decoding="async" onerror="imgFallback(this)">';
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+function sorted() {
+  var list = products.slice();
+  list.sort(function (a, b) {
+    var d = sortBy === 'price'
+      ? a.price - b.price
+      : a.name.localeCompare(b.name, 'zh-Hant');
+    if (d === 0) d = a.name.localeCompare(b.name, 'zh-Hant');
+    return asc ? d : -d;
+  });
+  return list;
+}
+
+function render() {
+  bar.querySelectorAll('button[data-sort]').forEach(function (b) {
+    var on = b.getAttribute('data-sort') === sortBy;
+    b.classList.toggle('on', on);
+    b.textContent = (b.getAttribute('data-sort') === 'price' ? '售價' : '名稱') +
+                    (on ? (asc ? ' ↑' : ' ↓') : '');
+  });
+
+  var list = sorted();
+  if (!list.length) {
+    listEl.innerHTML = '<li class="hint">還沒有商品</li>';
+    summaryEl.textContent = '';
+    return;
+  }
+  listEl.innerHTML = list.map(function (p) {
+    return '<li>' +
+           '<span class="pthumb">' + IMG_TAG(p) + '</span>' +
+           '<span class="pname">' + escapeHtml(p.name) + '</span>' +
+           '<span class="pprice">$' + p.price + '</span></li>';
+  }).join('');
+  summaryEl.textContent = '共 ' + list.length + ' 項';
+}
+
+bar.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-sort]');
+  if (!btn) return;
+  var key = btn.getAttribute('data-sort');
+  if (key === sortBy) asc = !asc;          // 再按一次換升降冪
+  else { sortBy = key; asc = true; }
+  saveSort('price', sortBy, asc);
+  render();
+});
+
+var listCard = document.getElementById('listCard');
+var loadedOnce = false;   // 第一次是「載入中」，之後重抓是「更新中」
+
+function load() {
+  return withMask(listCard, apiCall('list'), loadedOnce ? '更新中…' : '載入中…')
+    .then(function (l) { loadedOnce = true; products = l; render(); })
+    .catch(function (err) {
+      listEl.innerHTML = '<li class="hint">載入失敗</li>';
+      showMsg(msgEl, err.message, 'err');
+    });
+}
+
+load();
+</script>
+</body>
+</html>

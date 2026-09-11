@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>銷貨紀錄</title>
+<link rel="icon" href="icons/icon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="icons/icon-16.png" sizes="16x16" type="image/png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="167x167" href="icons/icon-167.png">
+<link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ff9b73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="庫存">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>📖 銷貨紀錄</h1>
+    <nav>
+      <a href="price.html">價目表</a>
+      <a href="sales.html">銷貨</a>
+      <a href="history.html" aria-current="page">紀錄</a>
+      <a href="stock.html">庫存管理</a>
+    </nav>
+  </header>
+
+  <div id="msg" class="msg" hidden></div>
+
+  <div class="card" id="listCard">
+    <div class="row" style="margin-bottom:12px">
+      <div style="flex:2 1 200px"><input id="search" type="search" placeholder="搜尋商品名稱或備註"></div>
+      <div style="flex:0 0 auto"><button type="button" class="ghost" id="refresh">重新載入</button></div>
+    </div>
+    <p class="hint" id="summary">載入中…</p>
+
+    <div id="list"><p class="hint">載入中…</p></div>
+
+    <div class="actions" id="moreWrap" hidden>
+      <button type="button" class="ghost" id="more">載入更多</button>
+    </div>
+  </div>
+</div>
+
+<script src="api.js"></script>
+<script src="dialog.js"></script>
+<script>
+var PAGE = 30;
+
+var msgEl = document.getElementById('msg');
+var listEl = document.getElementById('list');
+var summaryEl = document.getElementById('summary');
+var searchEl = document.getElementById('search');
+var moreWrap = document.getElementById('moreWrap');
+var moreBtn = document.getElementById('more');
+
+var listCard = document.getElementById('listCard');
+var loadedOnce = false;
+var items = [];
+var total = 0;
+var hasMore = false;
+var loading = false;
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+
+/* 2026-09-12 00:09:14 -> { day: '9/12', time: '00:09' } */
+function splitTs(v) {
+  var m = String(v || '').match(/^\d{4}-(\d{2})-(\d{2})[ T](\d{2}:\d{2})/);
+  if (!m) return { day: String(v || ''), time: '' };
+  return { day: Number(m[1]) + '/' + Number(m[2]), time: m[3] };
+}
+
+function visible() {
+  var q = searchEl.value.trim().toLowerCase();
+  if (!q) return items;
+  return items.filter(function (s) {
+    return (s.productName + ' ' + s.note).toLowerCase().indexOf(q) >= 0;
+  });
+}
+
+/* 同一次送出的算一批，批次內再列各品項 */
+function groupBatches(list) {
+  var out = [];
+  var byKey = {};
+  list.forEach(function (s) {
+    // 舊紀錄沒有 batchId，各自成一批
+    var key = s.batchId || ('row:' + s.row);
+    if (!byKey[key]) {
+      byKey[key] = { key: key, batchId: s.batchId, day: splitTs(s.timestamp).day,
+                     time: splitTs(s.timestamp).time, note: s.note, items: [], qty: 0 };
+      out.push(byKey[key]);
+    }
+    byKey[key].items.push(s);
+    byKey[key].qty += s.qty;
+    if (!byKey[key].note && s.note) byKey[key].note = s.note;
+  });
+  return out;
+}
+
+function render() {
+  var list = visible();
+  summaryEl.textContent = '共 ' + total + ' 筆，已載入 ' + items.length +
+    (searchEl.value.trim() ? '，符合搜尋 ' + list.length + ' 筆' : '');
+
+  if (!list.length) {
+    listEl.innerHTML = '<p class="hint">' + (items.length ? '沒有符合的紀錄' : '還沒有銷貨紀錄') + '</p>';
+    return;
+  }
+
+  var html = '';
+  var curDay = null;
+  groupBatches(list).forEach(function (g) {
+    if (g.day !== curDay) {
+      curDay = g.day;
+      html += '<h3 class="day">' + escapeHtml(curDay) + '</h3>';
+    }
+    var multi = g.items.length > 1;
+    html += '<div class="batch' + (multi ? ' multi' : '') + '">' +
+      '<div class="batch-head">' +
+        '<span class="b-time">' + escapeHtml(g.time) + '</span>' +
+        (multi ? '<span class="b-tag">' + g.items.length + ' 項・' + g.qty + ' 件</span>' : '') +
+        (g.note ? '<span class="b-note">' + escapeHtml(g.note) + '</span>' : '') +
+        (g.batchId && multi
+          ? '<button type="button" class="danger b-del" data-batch="' + escapeHtml(g.batchId) + '">刪整批</button>'
+          : '') +
+      '</div>' +
+      '<ul class="hist">' +
+      g.items.map(function (s) {
+        return '<li data-row="' + s.row + '">' +
+          '<span class="pthumb sm"><img src="images/' + encodeURIComponent(s.productName) +
+            '.jpg" alt="" loading="lazy" decoding="async" onerror="imgFallback(this)"></span>' +
+          '<span class="h-main"><span class="h-name">' + escapeHtml(s.productName) + '</span></span>' +
+          '<span class="h-qty">× ' + s.qty + '</span>' +
+          '<button type="button" class="danger" data-del="' + s.row + '">刪除</button>' +
+        '</li>';
+      }).join('') +
+      '</ul></div>';
+  });
+  listEl.innerHTML = html;
+}
+
+function load(reset) {
+  if (loading) return Promise.resolve();
+  loading = true;
+  if (reset) { items = []; }
+  moreBtn.disabled = true;
+
+  // 三種情境文案不同：第一次進頁、重抓（資料已在畫面上）、往下翻頁
+  var label = !loadedOnce ? '載入中…' : (reset ? '更新中…' : '載入更多…');
+  return withMask(listCard, apiCall('sales', { limit: PAGE, offset: items.length }), label)
+    .then(function (res) {
+      loadedOnce = true;
+      items = items.concat(res.items || []);
+      total = res.total || 0;
+      hasMore = !!res.hasMore;
+      moreWrap.hidden = !hasMore;
+      render();
+    })
+    .catch(function (err) {
+      listEl.innerHTML = '<p class="hint">載入失敗：' + escapeHtml(err.message) + '</p>';
+      showMsg(msgEl, err.message, 'err');
+    })
+    .then(function () { loading = false; moreBtn.disabled = false; });
+}
+
+listEl.addEventListener('click', function (e) {
+  var bbtn = e.target.closest('button[data-batch]');
+  if (bbtn) {
+    var bid = bbtn.getAttribute('data-batch');
+    var group = groupBatches(items).filter(function (g) { return g.batchId === bid; })[0];
+    if (!group) return;
+    var rowsHtml = group.items.map(function (x) {
+      return '<div class="ov-row"><span>' + escapeHtml(x.productName) + '</span><span>× ' + x.qty + '</span></div>';
+    }).join('');
+
+    ovConfirm('刪除整批？',
+              group.items.length + ' 項・' + group.qty + ' 件，剩餘庫存會自動回補',
+              rowsHtml, '刪除整批', true)
+      .then(function (yes) {
+        if (!yes) return;
+        ovState('loading', '刪除中…', '正在更新試算表');
+        bbtn.disabled = true;
+        return apiCall('deleteBatch', { batchId: bid })
+          .then(function (r) {
+            ovState('ok', '已刪除 ' + r.count + ' 筆', '剩餘庫存已回補');
+            return load(true);
+          })
+          .catch(function (err) {
+            ovState('err', '刪除失敗', err.message);
+            bbtn.disabled = false;
+            bbtn.textContent = '刪整批';
+          });
+      });
+    return;
+  }
+
+  var btn = e.target.closest('button[data-del]');
+  if (!btn) return;
+  var row = Number(btn.getAttribute('data-del'));
+  var s = items.filter(function (x) { return x.row === row; })[0];
+  if (!s) return;
+
+  ovConfirm('刪除這筆紀錄？', s.timestamp + '　剩餘庫存會回補 ' + s.qty,
+            '<div class="ov-row"><span>' + escapeHtml(s.productName) + '</span><span>× ' + s.qty + '</span></div>',
+            '刪除', true)
+    .then(function (yes) {
+      if (!yes) return;
+      ovState('loading', '刪除中…', '正在更新試算表');
+      btn.disabled = true;
+      return apiCall('deleteSale', { row: s.row, productId: s.productId, qty: s.qty })
+        .then(function (r) {
+          ovState('ok', '已刪除', r.productName + ' × ' + r.qty +
+            (r.stock === null ? '（商品已刪除）' : '，剩餘回到 ' + r.stock));
+          return load(true);      // 列號會位移，整個重抓比較保險
+        })
+        .catch(function (err) {
+          ovState('err', '刪除失敗', err.message);
+          btn.disabled = false;
+          btn.textContent = '刪除';
+        });
+    });
+});
+
+searchEl.addEventListener('input', render);
+moreBtn.addEventListener('click', function () { load(false); });
+document.getElementById('refresh').addEventListener('click', function () { load(true); });
+
+load(true);
+</script>
+</body>
+</html>
