@@ -836,3 +836,38 @@ body.sheet-open {
     padding-right: max(12px, env(safe-area-inset-right));
   }
 }
+
+/* ==========================================================
+ * iOS 縮放問題
+ *
+ * 1. 連點兩下會觸發雙擊縮放 —— touch-action: manipulation 可以
+ *    關掉雙擊縮放，但保留捲動與雙指縮放。
+ * 2. 輸入框字級小於 16px 時，聚焦會自動放大整頁 —— 觸控裝置
+ *    一律給 16px。
+ *
+ * 不用 user-scalable=no：那會連使用者自己放大也擋掉，而且
+ * iOS 10 之後本來就會忽略。
+ * ========================================================== */
+button,
+input,
+select,
+textarea,
+a,
+.stepper,
+.cart-item,
+td.name {
+  touch-action: manipulation;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  td input,
+  td textarea,
+  .stepper input {
+    font-size: 16px;
+  }
+}
