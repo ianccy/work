@@ -146,6 +146,7 @@ function route_(action, p) {
     case 'deleteBatch': return deleteBatch(p);
     case 'summary': return salesSummary();
     case 'payments': return paymentMethods();
+    case 'updateSaleMeta': return updateSaleMeta(p);
     default: throw new Error('未知的 action：' + action);
   }
 }
@@ -311,6 +312,7 @@ function recordSale(p) {
   var qty = num_(p.qty);
   if (!id) throw new Error('缺少商品');
   if (!(qty > 0)) throw new Error('數量必須大於 0');
+  if (!String(p.payment || '').trim()) throw new Error('請選擇金流方式');
 
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
@@ -342,6 +344,7 @@ function recordSale(p) {
 function batchSale(p) {
   var items = parseItems_(String(p.items || ''));
   if (!items.length) throw new Error('沒有要送出的商品');
+  if (!String(p.payment || '').trim()) throw new Error('請選擇金流方式');
 
   var reqId = String(p.reqId || '').trim();
   var batchId = reqId || ('b' + Date.now());
@@ -579,6 +582,57 @@ function listSales(limit, offset) {
  * 刪之前核對 row 上的內容是否仍與前端看到的一致，
  * 避免別人同時新增/刪除造成列號位移而誤刪。
  */
+/**
+ * 修改銷貨紀錄的備註與金流。
+ * 備註和金流是整筆交易的屬性，所以有 batchId 時整批一起改；
+ * 沒有 batchId 的舊紀錄則用列號 + 內容核對改單列。
+ * 只動 note 與 payment，不碰數量與單價 —— 那會影響庫存與結算。
+ */
+function updateSaleMeta(p) {
+  var hasNote = p.note !== undefined;
+  var hasPay = p.payment !== undefined;
+  if (!hasNote && !hasPay) throw new Error('沒有要修改的欄位');
+
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var sh = sheet_(SALES);
+    var last = sh.getLastRow();
+    if (last < 2) throw new Error('沒有紀錄');
+
+    var rows = sh.getRange(2, 1, last - 1, SALES_HEADERS.length).getValues();
+    var targets = [];
+    var batchId = String(p.batchId || '').trim();
+
+    if (batchId) {
+      for (var i = 0; i < rows.length; i++) {
+        if (String(rows[i][5] || '') === batchId) targets.push(i);
+      }
+      if (!targets.length) throw new Error('這個批次已經不存在了，請重新整理');
+    } else {
+      var row = Number(p.row);
+      if (!(row >= 2) || row > last) throw new Error('找不到這筆紀錄，請重新整理');
+      var idx = row - 2;
+      if (String(rows[idx][1]) !== String(p.productId) || num_(rows[idx][3]) !== Number(p.qty)) {
+        throw new Error('紀錄已被其他人變更，請重新整理後再改');
+      }
+      targets.push(idx);
+    }
+
+    // 只寫回會變動的兩欄，避免覆蓋掉其他人同時改的內容
+    targets.forEach(function (i) {
+      if (hasNote) sh.getRange(i + 2, 5).setValue(String(p.note));
+      if (hasPay) sh.getRange(i + 2, 8).setValue(String(p.payment));
+    });
+
+    return { count: targets.length,
+             note: hasNote ? String(p.note) : null,
+             payment: hasPay ? String(p.payment) : null };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
 function deleteSale(p) {
   var row = Number(p.row);
   if (!(row >= 2)) throw new Error('列號不正確');
@@ -705,6 +759,13 @@ function runSelfTest() {
   batchSale({ reqId: bid, items: p.id + ':1,' + p2.id + ':1', note: '__batch__' });
   var listed = listSales(10, 0).items.filter(function (x) { return x.batchId === bid; });
   check('同一批的 batchId 一致', listed.length === 2);
+  var edited = updateSaleMeta({ batchId: bid, note: '__edited__', payment: '__pay__' });
+  check('整批改備註/金流回報 2 筆', edited.count === 2, JSON.stringify(edited));
+  var after2 = listSales(10, 0).items.filter(function (x) { return x.batchId === bid; });
+  check('備註已更新', after2.every(function (x) { return x.note === '__edited__'; }));
+  check('金流已更新', after2.every(function (x) { return x.payment === '__pay__'; }));
+  check('數量未被動到', after2.every(function (x) { return x.qty === 1; }));
+
   var db = deleteBatch({ batchId: bid });
   check('整批刪除回報 2 筆', db.count === 2);
   check('整批刪除沒有改動初始庫存',

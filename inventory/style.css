@@ -976,9 +976,12 @@ table.sumtable .money { font-weight: 700; color: var(--accent-dark); }
 .sb-quick .pay-row button {
   flex: 0 0 46px;
   width: 46px;
+  min-width: 46px;
   padding: 0;
   font-size: 19px;
   line-height: 1;
+  white-space: nowrap;      /* 方鈕裡不能折行 */
+  overflow: hidden;
 }
 .sb-quick #paymentNew { flex: 1 1 auto; min-width: 0; }
 
@@ -993,4 +996,39 @@ table.sumtable .money { font-weight: 700; color: var(--accent-dark); }
   .sb-quick { flex-direction: row; align-items: center; }
   .sb-quick .pay-row { flex: 0 0 46%; }
   .sb-quick > #note { flex: 1 1 auto; min-width: 0; }
+}
+
+/* 批次標頭的動作按鈕 */
+.b-actions { margin-left: auto; display: flex; gap: 6px; flex: 0 0 auto; }
+.b-actions button { padding: 6px 11px; font-size: 12px; }
+.b-del { margin-left: 0; }
+
+/* 對話框裡的表單欄位 */
+.ov-field { text-align: left; margin-bottom: 12px; }
+.ov-field:last-child { margin-bottom: 0; }
+.ov-field label { font-size: 13px; }
+.ov-field .pay-row { display: flex; gap: 8px; }
+.ov-field .pay-row select { flex: 1 1 auto; min-width: 0; }
+.ov-field .pay-row select[hidden] { display: none; }
+.ov-field .pay-row input[hidden] { display: none; }
+.ov-field .pay-row input { flex: 1 1 auto; min-width: 0; }
+.ov-field .pay-row button {
+  flex: 0 0 46px; width: 46px; min-width: 46px;
+  padding: 0; font-size: 18px; line-height: 1;
+  white-space: nowrap; overflow: hidden;
+}
+
+/* 必填欄位未填時的提示 */
+select.need, input.need {
+  border-color: var(--danger) !important;
+  box-shadow: 0 0 0 3px #ffe0e6 !important;
+  animation: shake .3s;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  select.need, input.need { animation: none; }
 }

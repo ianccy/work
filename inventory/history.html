@@ -73,6 +73,7 @@ var sumTotal = document.getElementById('sumTotal');
 var sumTabs = document.getElementById('sumTabs');
 var sumBody = document.getElementById('sumBody');
 var summary = null;
+var payMethods = [];
 var sumTab = loadSort('historyTab', { by: 'date', asc: true }).by;
 var sumLoadedOnce = false;
 
@@ -150,9 +151,12 @@ function render() {
         (g.amount ? '<span class="b-amt">$' + g.amount.toLocaleString('en-US') + '</span>' : '') +
         (g.payment ? '<span class="b-pay">' + escapeHtml(g.payment) + '</span>' : '') +
         (g.note ? '<span class="b-note">' + escapeHtml(g.note) + '</span>' : '') +
-        (g.batchId && multi
-          ? '<button type="button" class="danger b-del" data-batch="' + escapeHtml(g.batchId) + '">刪整批</button>'
-          : '') +
+        '<span class="b-actions">' +
+          '<button type="button" class="ghost b-edit" data-edit="' + escapeHtml(g.key) + '">編輯</button>' +
+          (g.batchId && multi
+            ? '<button type="button" class="danger b-del" data-batch="' + escapeHtml(g.batchId) + '">刪整批</button>'
+            : '') +
+        '</span>' +
       '</div>' +
       '<ul class="hist">' +
       g.items.map(function (s) {
@@ -189,6 +193,9 @@ function load() {
 }
 
 listEl.addEventListener('click', function (e) {
+  var ebtn = e.target.closest('button[data-edit]');
+  if (ebtn) { editGroup(ebtn.getAttribute('data-edit'), ebtn); return; }
+
   var bbtn = e.target.closest('button[data-batch]');
   if (bbtn) {
     var bid = bbtn.getAttribute('data-batch');
@@ -299,6 +306,12 @@ function shortDate(d) {
   return (m[1] === thisYear ? '' : m[1] + '/') + Number(m[2]) + '/' + Number(m[3]);
 }
 
+function loadPayments() {
+  return apiCall('payments')
+    .then(function (list) { payMethods = list || []; })
+    .catch(function () { payMethods = []; });   // 拿不到就只能手動輸入，不擋編輯
+}
+
 function loadSummary() {
   return withMask(sumCard, apiCall('summary'), sumLoadedOnce ? '更新中…' : '載入中…')
     .then(function (res) { sumLoadedOnce = true; summary = res; renderSummary(); })
@@ -316,11 +329,88 @@ sumTabs.addEventListener('click', function (e) {
   renderSummary();
 });
 
+/* 編輯備註與金流。兩者是整筆交易的屬性，所以整批一起改。 */
+function editGroup(key, btn) {
+  var g = groupBatches(items).filter(function (x) { return x.key === key; })[0];
+  if (!g) return;
+
+  var opts = ['<option value="">請選擇金流方式</option>'].concat(
+    payMethods.map(function (m) {
+      return '<option value="' + escapeHtml(m.name) + '"' +
+             (m.name === g.payment ? ' selected' : '') + '>' + escapeHtml(m.name) + '</option>';
+    })
+  );
+  // 目前的值不在清單裡（例如商品已刪、或試算表手改過）也要保留
+  if (g.payment && !payMethods.some(function (m) { return m.name === g.payment; })) {
+    opts.splice(1, 0, '<option value="' + escapeHtml(g.payment) + '" selected>' + escapeHtml(g.payment) + '</option>');
+  }
+
+  var form =
+    '<div class="ov-field"><label for="edPay">金流方式</label>' +
+      '<div class="pay-row">' +
+        '<select id="edPay">' + opts.join('') + '</select>' +
+        '<input id="edPayNew" type="text" placeholder="新的金流方式" hidden>' +
+        '<button type="button" class="ghost" id="edPayNewBtn" title="新增金流方式">＋</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="ov-field"><label for="edNote">備註</label>' +
+      '<input id="edNote" type="text" value="' + escapeHtml(g.note || '') + '" placeholder="選填"></div>';
+
+  var sub = g.items.length > 1
+    ? g.time + '　這批 ' + g.items.length + ' 項會一起更新'
+    : g.time + '　' + g.items[0].productName;
+
+  ovConfirm('編輯備註與金流', sub, form, '儲存', false).then(function (yes) {
+    var sel = document.getElementById('edPay');
+    var neu = document.getElementById('edPayNew');
+    var note = document.getElementById('edNote');
+    var payment = (neu && !neu.hidden) ? neu.value.trim() : (sel ? sel.value : '');
+    var noteVal = note ? note.value : '';
+    if (!yes) return;
+
+    if (!payment) {
+      ovState('err', '請先選擇金流方式', '金流是必填欄位');
+      return;
+    }
+
+    ovState('loading', '儲存中…', '正在更新試算表');
+    if (btn) btn.disabled = true;
+
+    var params = g.batchId
+      ? { batchId: g.batchId, note: noteVal, payment: payment }
+      : { row: g.items[0].row, productId: g.items[0].productId, qty: g.items[0].qty,
+          note: noteVal, payment: payment };
+
+    return apiCall('updateSaleMeta', params)
+      .then(function (r) {
+        ovState('ok', '已更新 ' + r.count + ' 筆', (payment || '（未填）') + (noteVal ? '　' + noteVal : ''));
+        return Promise.all([load(), loadSummary(), loadPayments()]);
+      })
+      .catch(function (err) {
+        ovState('err', '更新失敗', err.message);
+        if (btn) btn.disabled = false;
+      });
+  });
+}
+
+/* 對話框裡的「＋」要切成輸入新金流 */
+document.addEventListener('click', function (e) {
+  if (!e.target.closest('#edPayNewBtn')) return;
+  var sel = document.getElementById('edPay');
+  var neu = document.getElementById('edPayNew');
+  var toNew = neu.hidden;
+  neu.hidden = !toNew;
+  sel.hidden = toNew;
+  e.target.closest('#edPayNewBtn').textContent = toNew ? '↩' : '＋';
+  if (toNew) neu.focus();
+});
+
 searchEl.addEventListener('input', render);
 document.getElementById('refresh').addEventListener('click', function () { load(); loadSummary(); });
 
 load();
 loadSummary();
+loadPayments();
 </script>
 </body>
 </html>

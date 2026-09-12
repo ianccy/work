@@ -87,7 +87,7 @@
     <div class="sb-quick" id="sbQuick" hidden>
       <div class="pay-row">
         <select id="payment" aria-label="金流方式">
-          <option value="">金流（未填）</option>
+          <option value="">請選擇金流方式</option>
         </select>
         <input id="paymentNew" type="text" placeholder="新的金流方式" hidden>
         <button type="button" class="ghost" id="payNew" aria-label="新增金流方式" title="新增金流方式">＋</button>
@@ -105,16 +105,6 @@
       </button>
       <button type="button" id="submit" disabled>送出銷貨</button>
     </div>
-  </div>
-</div>
-
-<div class="overlay" id="overlay" hidden>
-  <div class="ov-box" role="status" aria-live="polite">
-    <div class="ov-icon" id="ovIcon"><span class="ov-spin"></span></div>
-    <p class="ov-title" id="ovTitle">登錄中…</p>
-    <p class="ov-sub" id="ovSub">正在寫入試算表，請稍候</p>
-    <div class="ov-detail" id="ovDetail" hidden></div>
-    <button type="button" class="ghost" id="ovClose" hidden>完成</button>
   </div>
 </div>
 
@@ -138,13 +128,6 @@ var sbToggle = document.getElementById('sbToggle');
 var sbCaret = document.getElementById('sbCaret');
 var sheetBackdrop = document.getElementById('sheetBackdrop');
 var lockedScrollY = 0;
-var overlay = document.getElementById('overlay');
-var ovIcon = document.getElementById('ovIcon');
-var ovTitle = document.getElementById('ovTitle');
-var ovSub = document.getElementById('ovSub');
-var ovDetail = document.getElementById('ovDetail');
-var ovClose = document.getElementById('ovClose');
-var ovTimer = null;
 var sbCount = document.getElementById('sbCount');
 var sbAmount = document.getElementById('sbAmount');
 
@@ -335,7 +318,9 @@ function currentPayment() {
 function setPayMode(isNew) {
   payNewEl.hidden = !isNew;
   payEl.hidden = isNew;
-  payNewBtn.textContent = isNew ? '選既有' : '＋ 新增';
+  // 這顆是 46px 的方鈕，放兩個字會折行
+  payNewBtn.textContent = isNew ? '↩' : '＋';
+  payNewBtn.title = isNew ? '改用既有的金流方式' : '新增金流方式';
   if (isNew) payNewEl.focus();
 }
 
@@ -350,7 +335,7 @@ function loadPayments() {
     .then(function (list) {
       var last = '';
       try { last = localStorage.getItem('inv.lastPayment') || ''; } catch (e) { /* 略過 */ }
-      payEl.innerHTML = '<option value="">（未填）</option>' +
+      payEl.innerHTML = '<option value="">請選擇金流方式</option>' +
         list.map(function (m) {
           return '<option value="' + escapeHtml(m.name) + '">' + escapeHtml(m.name) + '</option>';
         }).join('');
@@ -377,37 +362,6 @@ function loadSales() {
     salesBody.innerHTML = '<tr><td colspan="4" class="hint">載入失敗：' + escapeHtml(err.message) + '</td></tr>';
   });
 }
-
-/* 送出時蓋一層全螢幕狀態，順便擋住重複點擊 */
-function ovShow(state, title, sub, detail) {
-  clearTimeout(ovTimer);
-  overlay.hidden = false;
-  overlay.className = 'overlay ' + state;
-  ovTitle.textContent = title;
-  ovSub.textContent = sub || '';
-  ovSub.hidden = !sub;
-  ovIcon.innerHTML = state === 'loading' ? '<span class="ov-spin"></span>'
-                   : state === 'ok' ? '<span class="ov-check">✓</span>'
-                   : '<span class="ov-cross">！</span>';
-  if (detail) { ovDetail.innerHTML = detail; ovDetail.hidden = false; }
-  else { ovDetail.hidden = true; }
-  ovClose.hidden = (state === 'loading');
-  ovClose.textContent = state === 'ok' ? '完成' : '知道了';
-  if (state === 'ok') ovTimer = setTimeout(ovHide, 3500);
-}
-
-function ovHide() {
-  clearTimeout(ovTimer);
-  overlay.hidden = true;
-}
-
-ovClose.addEventListener('click', ovHide);
-overlay.addEventListener('click', function (e) {
-  if (e.target === overlay && !overlay.classList.contains('loading')) ovHide();
-});
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && !overlay.hidden && !overlay.classList.contains('loading')) ovHide();
-});
 
 /*
  * 面板展開時把整頁鎖住。
@@ -495,13 +449,24 @@ window.addEventListener('resize', syncBarSpace);
 submitEl.addEventListener('click', function () {
   var list = picked();
   if (!list.length) return;
+
+  // 金流必填 —— 事後補很難回想錢收到哪裡去了
+  if (!currentPayment()) {
+    if (sbPanel.hidden) { /* 常駐列本來就看得到，不用展開 */ }
+    var target = payNewEl.hidden ? payEl : payNewEl;
+    target.classList.add('need');
+    target.focus();
+    ovState('err', '請先選擇金流方式', '要知道這筆錢收到哪裡，才好對帳');
+    setTimeout(function () { target.classList.remove('need'); }, 2500);
+    return;
+  }
   var items = list.map(function (p) { return p.id + ':' + qty[p.id]; }).join(',');
   var totalQty = list.reduce(function (a, p) { return a + qty[p.id]; }, 0);
   var totalAmt = list.reduce(function (a, p) { return a + qty[p.id] * p.price; }, 0);
 
   submitEl.disabled = true;
   submitEl.textContent = '送出中…';
-  ovShow('loading', '登錄中…', '正在寫入試算表，請稍候');
+  ovState('loading', '登錄中…', '正在寫入試算表，請稍候');
 
   apiCall('batchSale', { reqId: saleReqId, items: items, note: noteEl.value, payment: currentPayment() })
     .then(function (res) {
@@ -509,8 +474,8 @@ submitEl.addEventListener('click', function () {
         return '<div class="ov-row"><span>' + escapeHtml(r.name) + '</span>' +
                '<span>× ' + r.qty + '<b>剩 ' + r.stock + '</b></span></div>';
       }).join('');
-      ovShow('ok', '已登錄 ' + res.length + ' 項',
-             '共 ' + totalQty + ' 件　金額 $' + totalAmt, rows);
+      ovState('ok', '已登錄 ' + res.length + ' 項',
+              '共 ' + totalQty + ' 件　金額 $' + totalAmt, rows);
 
       var usedPay = currentPayment();
       if (usedPay) {
@@ -526,7 +491,7 @@ submitEl.addEventListener('click', function () {
       return Promise.all([loadProducts(), loadSales()]);
     })
     .catch(function (err) {
-      ovShow('err', '登錄失敗', err.message);
+      ovState('err', '登錄失敗', err.message);
       showMsg(msgEl, err.message, 'err');
       renderCart();
     });
