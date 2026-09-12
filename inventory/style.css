@@ -871,3 +871,71 @@ td.name {
     font-size: 16px;
   }
 }
+
+/* ---------- 銷貨結算 ---------- */
+.sum-grand {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.sum-grand > div {
+  background: #fffaf6;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.sum-k { display: block; font-size: 12px; color: var(--muted); font-weight: 700; }
+.sum-v { display: block; font-size: 20px; font-weight: 700; margin-top: 2px; }
+.sum-v.money { color: var(--accent-dark); }
+
+.hint.warn {
+  background: #fff3e8;
+  border: 2px solid var(--line-strong);
+  border-radius: 12px;
+  padding: 9px 12px;
+  color: var(--accent-dark);
+  margin: 0 0 12px;
+}
+
+.sumtabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.sumtabs button { padding: 7px 16px; font-size: 14px; }
+.sumtabs button.on,
+.sumtabs button.on:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 3px 0 var(--accent-dark);
+}
+
+table.sumtable { border-collapse: collapse; border-spacing: 0; width: 100%; min-width: 0; font-size: 14px; }
+table.sumtable th {
+  padding: 0 10px 6px;
+  border-bottom: 2px solid var(--line);
+}
+table.sumtable td {
+  background: none;
+  border: none;
+  border-bottom: 2px dotted var(--line);
+  border-radius: 0;
+  padding: 9px 10px;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+table.sumtable tr:last-child td { border-bottom: none; }
+table.sumtable .r { text-align: right; white-space: nowrap; }
+table.sumtable .money { font-weight: 700; color: var(--accent-dark); }
+
+/* 結算表在窄螢幕不要被卡片化規則改成方塊 */
+@media (max-width: 1024px) {
+  table.sumtable, table.sumtable thead, table.sumtable tbody,
+  table.sumtable tr, table.sumtable th, table.sumtable td { display: revert; }
+  table.sumtable { display: table; }
+  table.sumtable thead { display: table-header-group; }
+  table.sumtable tbody { display: table-row-group; }
+  table.sumtable tr { display: table-row; background: none; border: none; padding: 0; margin: 0; }
+  table.sumtable th, table.sumtable td { display: table-cell; }
+  table.sumtable td::before { content: none; }
+  .sum-grand { grid-template-columns: repeat(3, 1fr); }
+}

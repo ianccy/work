@@ -34,6 +34,16 @@
 
   <div id="msg" class="msg" hidden></div>
 
+  <div class="card" id="sumCard">
+    <h2>📊 結算</h2>
+    <div id="sumTotal" class="hint">載入中…</div>
+    <div class="sumtabs" id="sumTabs" hidden>
+      <button type="button" class="ghost on" data-tab="date">依日期</button>
+      <button type="button" class="ghost" data-tab="product">依商品</button>
+    </div>
+    <div class="table-scroll"><div id="sumBody"></div></div>
+  </div>
+
   <div class="card" id="listCard">
     <div class="row" style="margin-bottom:12px">
       <div style="flex:2 1 200px"><input id="search" type="search" placeholder="搜尋商品名稱或備註"></div>
@@ -60,6 +70,14 @@ var summaryEl = document.getElementById('summary');
 var searchEl = document.getElementById('search');
 var moreWrap = document.getElementById('moreWrap');
 var moreBtn = document.getElementById('more');
+
+var sumCard = document.getElementById('sumCard');
+var sumTotal = document.getElementById('sumTotal');
+var sumTabs = document.getElementById('sumTabs');
+var sumBody = document.getElementById('sumBody');
+var summary = null;
+var sumTab = loadSort('historyTab', { by: 'date', asc: true }).by;
+var sumLoadedOnce = false;
 
 var listCard = document.getElementById('listCard');
 var loadedOnce = false;
@@ -194,7 +212,7 @@ listEl.addEventListener('click', function (e) {
         return apiCall('deleteBatch', { batchId: bid })
           .then(function (r) {
             ovState('ok', '已刪除 ' + r.count + ' 筆', '剩餘庫存已回補');
-            return load(true);
+            return Promise.all([load(true), loadSummary()]);
           })
           .catch(function (err) {
             ovState('err', '刪除失敗', err.message);
@@ -222,7 +240,7 @@ listEl.addEventListener('click', function (e) {
         .then(function (r) {
           ovState('ok', '已刪除', r.productName + ' × ' + r.qty +
             (r.stock === null ? '（商品已刪除）' : '，剩餘回到 ' + r.stock));
-          return load(true);      // 列號會位移，整個重抓比較保險
+          return Promise.all([load(true), loadSummary()]);   // 列號會位移，整個重抓比較保險
         })
         .catch(function (err) {
           ovState('err', '刪除失敗', err.message);
@@ -232,11 +250,80 @@ listEl.addEventListener('click', function (e) {
     });
 });
 
+/* 結算：總計 + 依日期 / 依商品的小計 */
+function money(n) {
+  return '$' + Number(n).toLocaleString('en-US');
+}
+
+function renderSummary() {
+  if (!summary) return;
+  var t = summary.total;
+  sumTotal.className = '';
+  sumTotal.innerHTML =
+    '<div class="sum-grand">' +
+      '<div><span class="sum-k">筆數</span><span class="sum-v">' + t.count + '</span></div>' +
+      '<div><span class="sum-k">件數</span><span class="sum-v">' + t.qty + '</span></div>' +
+      '<div><span class="sum-k">金額</span><span class="sum-v money">' + money(t.amount) + '</span></div>' +
+    '</div>' +
+    (summary.noPrice
+      ? '<p class="hint warn">有 ' + summary.noPrice + ' 筆沒有記錄單價，金額以 0 計。' +
+        '在 Apps Script 執行一次 backfillSalePrices 可補上。</p>'
+      : '');
+
+  sumTabs.hidden = false;
+  sumTabs.querySelectorAll('button[data-tab]').forEach(function (b) {
+    b.classList.toggle('on', b.getAttribute('data-tab') === sumTab);
+  });
+
+  var rows = sumTab === 'date' ? summary.byDate : summary.byProduct;
+  if (!rows.length) { sumBody.innerHTML = '<p class="hint">還沒有銷貨紀錄</p>'; return; }
+
+  var head = sumTab === 'date' ? '日期' : '商品';
+  sumBody.innerHTML =
+    '<table class="sumtable"><thead><tr>' +
+      '<th>' + head + '</th><th class="r">筆數</th><th class="r">件數</th><th class="r">金額</th>' +
+    '</tr></thead><tbody>' +
+    rows.map(function (r) {
+      var label = sumTab === 'date' ? shortDate(r.date) : escapeHtml(r.name);
+      return '<tr><td>' + label + '</td>' +
+             '<td class="r">' + r.count + '</td>' +
+             '<td class="r">' + r.qty + '</td>' +
+             '<td class="r money">' + money(r.amount) + '</td></tr>';
+    }).join('') +
+    '</tbody></table>';
+}
+
+/* 2026-09-12 -> 9/12（跨年才顯示年份） */
+function shortDate(d) {
+  var m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return String(d);
+  var thisYear = String(new Date().getFullYear());
+  return (m[1] === thisYear ? '' : m[1] + '/') + Number(m[2]) + '/' + Number(m[3]);
+}
+
+function loadSummary() {
+  return withMask(sumCard, apiCall('summary'), sumLoadedOnce ? '更新中…' : '載入中…')
+    .then(function (res) { sumLoadedOnce = true; summary = res; renderSummary(); })
+    .catch(function (err) {
+      sumTotal.className = 'hint';
+      sumTotal.textContent = '結算載入失敗：' + err.message;
+    });
+}
+
+sumTabs.addEventListener('click', function (e) {
+  var btn = e.target.closest('button[data-tab]');
+  if (!btn) return;
+  sumTab = btn.getAttribute('data-tab');
+  saveSort('historyTab', sumTab, true);
+  renderSummary();
+});
+
 searchEl.addEventListener('input', render);
 moreBtn.addEventListener('click', function () { load(false); });
-document.getElementById('refresh').addEventListener('click', function () { load(true); });
+document.getElementById('refresh').addEventListener('click', function () { load(true); loadSummary(); });
 
 load(true);
+loadSummary();
 </script>
 </body>
 </html>

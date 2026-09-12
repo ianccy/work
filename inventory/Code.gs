@@ -12,7 +12,7 @@ var SS_ID = '1d-z5mWe6_olI2hXZ5Qg0gzBkiTkGcmgUge35QVqeZhQ';
 var PRODUCTS = 'products';
 var SALES = 'sales';
 var PRODUCT_HEADERS = ['id', 'name', 'price', 'initialStock', 'updatedAt'];
-var SALES_HEADERS = ['timestamp', 'productId', 'productName', 'qty', 'note', 'batchId'];
+var SALES_HEADERS = ['timestamp', 'productId', 'productName', 'qty', 'note', 'batchId', 'unitPrice'];
 
 /**
  * 一次性整理 products 欄位：刪掉第 6 欄以後的殘留資料，並寫上正確的 6 欄標題。
@@ -42,6 +42,34 @@ function cleanupProductColumns() {
   sh.setFrozenRows(1);
 
   return '刪掉 ' + removed + ' 欄殘留資料，標題已改為：' + PRODUCT_HEADERS.join(', ');
+}
+
+/**
+ * 一次性回填：舊的銷貨紀錄沒有 unitPrice 欄，用商品「目前的售價」補上。
+ * 只有在售價尚未調整過的情況下才準確 —— 之後新增的紀錄都會自己帶單價。
+ * 已經有值的列不會被覆蓋，可以安全重跑。
+ */
+function backfillSalePrices() {
+  var sh = sheet_(SALES);
+  var last = sh.getLastRow();
+  if (last < 2) return '沒有紀錄';
+
+  var prices = {};
+  listProducts().forEach(function (p) { prices[p.id] = p.price; });
+
+  var range = sh.getRange(2, 1, last - 1, SALES_HEADERS.length);
+  var rows = range.getValues();
+  var filled = 0, missing = 0;
+  for (var i = 0; i < rows.length; i++) {
+    if (!rows[i][0]) continue;
+    if (rows[i][6] !== '' && rows[i][6] !== null) continue;    // 已有值就跳過
+    var id = String(rows[i][1]);
+    if (prices[id] === undefined) { missing++; continue; }     // 商品已刪除
+    rows[i][6] = prices[id];
+    filled++;
+  }
+  range.setValues(rows);
+  return '回填 ' + filled + ' 筆單價' + (missing ? '，' + missing + ' 筆因商品已刪除而無法回填' : '');
 }
 
 /** 只跑一次：建立工作表與標題列（已存在則只補標題） */
@@ -116,6 +144,7 @@ function route_(action, p) {
     case 'sales':  return listSales(Number(p.limit) || 50, Number(p.offset) || 0);
     case 'deleteSale': return deleteSale(p);
     case 'deleteBatch': return deleteBatch(p);
+    case 'summary': return salesSummary();
     default: throw new Error('未知的 action：' + action);
   }
 }
@@ -295,7 +324,8 @@ function recordSale(p) {
 
     // 只寫銷貨紀錄，庫存是算出來的，不需要（也不該）改商品列
     sheet_(SALES).appendRow([new Date(), id, String(cur[1]), qty,
-                             String(p.note || ''), String(p.reqId || ('s' + Date.now()))]);
+                             String(p.note || ''), String(p.reqId || ('s' + Date.now())),
+                             num_(cur[2])]);   // 記下當下的單價，日後改價不影響歷史
 
     return { id: id, name: String(cur[1]), qty: qty, stock: stock - qty };
   } finally {
@@ -363,7 +393,7 @@ function batchSale(p) {
       var item = items[k];
       var row = rows[index[item.id]];
       var left = num_(row[3]) - (totals[item.id] || 0) - item.qty;
-      salesRows.push([now, item.id, String(row[1]), item.qty, note, batchId]);
+      salesRows.push([now, item.id, String(row[1]), item.qty, note, batchId, num_(row[2])]);
       result.push({ id: item.id, name: String(row[1]), qty: item.qty, stock: left });
     }
 
@@ -434,6 +464,54 @@ function deleteBatch(p) {
   }
 }
 
+/**
+ * 銷貨彙總。掃一次 sales 全表算出總計、每日小計、各商品小計。
+ *
+ * 金額用「當時記下的 unitPrice」，不是商品現在的售價，
+ * 所以之後調價不會讓歷史金額跟著跑掉。
+ * 沒有 unitPrice 的舊紀錄（跑過 backfillSalePrices 前）算 0，並回報筆數。
+ */
+function salesSummary() {
+  var sh = sheet_(SALES);
+  var last = sh.getLastRow();
+  var empty = { total: { count: 0, qty: 0, amount: 0 }, byDate: [], byProduct: [], noPrice: 0 };
+  if (last < 2) return empty;
+
+  var rows = sh.getRange(2, 1, last - 1, SALES_HEADERS.length).getValues();
+  var tz = Session.getScriptTimeZone();
+  var byDate = {}, byProduct = {};
+  var total = { count: 0, qty: 0, amount: 0 };
+  var noPrice = 0;
+
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    if (!r[0]) continue;
+    var qty = num_(r[3]);
+    var price = num_(r[6]);
+    if (!price) noPrice++;
+    var amount = price * qty;
+
+    var d = (r[0] instanceof Date) ? r[0] : new Date(r[0]);
+    var key = isNaN(d.getTime()) ? String(r[0]) : Utilities.formatDate(d, tz, 'yyyy-MM-dd');
+
+    if (!byDate[key]) byDate[key] = { date: key, count: 0, qty: 0, amount: 0 };
+    byDate[key].count++; byDate[key].qty += qty; byDate[key].amount += amount;
+
+    var name = String(r[2]);
+    if (!byProduct[name]) byProduct[name] = { name: name, count: 0, qty: 0, amount: 0 };
+    byProduct[name].count++; byProduct[name].qty += qty; byProduct[name].amount += amount;
+
+    total.count++; total.qty += qty; total.amount += amount;
+  }
+
+  var dates = Object.keys(byDate).map(function (k) { return byDate[k]; })
+    .sort(function (a, b) { return a.date < b.date ? 1 : -1; });          // 新到舊
+  var prods = Object.keys(byProduct).map(function (k) { return byProduct[k]; })
+    .sort(function (a, b) { return b.amount - a.amount || b.qty - a.qty; });
+
+  return { total: total, byDate: dates, byProduct: prods, noPrice: noPrice };
+}
+
 function listSales(limit, offset) {
   var sh = sheet_(SALES);
   var last = sh.getLastRow();
@@ -456,7 +534,9 @@ function listSales(limit, offset) {
       productName: String(rows[i][2]),
       qty: num_(rows[i][3]),
       note: String(rows[i][4]),
-      batchId: String(rows[i][5] || '')
+      batchId: String(rows[i][5] || ''),
+      unitPrice: num_(rows[i][6]),
+      amount: num_(rows[i][6]) * num_(rows[i][3])
     });
   }
   return { items: items, total: total, hasMore: offset + count < total };
@@ -506,8 +586,8 @@ function deleteSale(p) {
 /** 在編輯器選這個函式按執行，會跑完整流程並自動清掉測試資料 */
 function runSelfTest() {
   var log = [];
-  function check(label, cond) {
-    log.push((cond ? 'PASS ' : 'FAIL ') + label);
+  function check(label, cond, extra) {
+    log.push((cond ? 'PASS ' : 'FAIL ') + label + (extra ? '  ' + extra : ''));
     if (!cond) throw new Error('自我測試失敗：' + label + '\n' + log.join('\n'));
   }
 
@@ -570,6 +650,19 @@ function runSelfTest() {
   function stockOf(id) { return after.filter(function (x) { return x.id === id; })[0].stock; }
   check('原子性：A 庫存沒被扣', stockOf(p.id) === 3);
   check('原子性：B 庫存沒被扣', stockOf(p2.id) === 3);
+
+  // 彙總
+  var sum = salesSummary();
+  check('彙總有 total / byDate / byProduct',
+        !!sum.total && Array.isArray(sum.byDate) && Array.isArray(sum.byProduct));
+  var mineSum = sum.byProduct.filter(function (x) { return x.name === '__test__'; })[0];
+  check('彙總算得到 __test__', !!mineSum, JSON.stringify(mineSum));
+  check('彙總的件數與金額對得上', mineSum.amount === mineSum.qty * 35,
+        'amount=' + mineSum.amount + ' qty=' + mineSum.qty);
+  var dateSum = sum.byDate.reduce(function (a, d) { return a + d.qty; }, 0);
+  check('每日小計加總 = 總件數', dateSum === sum.total.qty, dateSum + ' vs ' + sum.total.qty);
+  var prodSum = sum.byProduct.reduce(function (a, d) { return a + d.amount; }, 0);
+  check('各商品金額加總 = 總金額', prodSum === sum.total.amount, prodSum + ' vs ' + sum.total.amount);
 
   // 整批刪除
   var bid = 'selftest-batch-' + Date.now();
