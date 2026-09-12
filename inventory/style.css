@@ -365,6 +365,7 @@ td.name:hover .name-text { border-color: var(--line-strong); background: #fffdfb
 .pthumb.sm { width: 40px; height: 40px; border-radius: 10px; }
 .pthumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pthumb .ph { font-size: 18px; opacity: .4; }
+img.is-placeholder { object-fit: contain; padding: 2px; }
 
 .pricelist li { gap: 12px; align-items: center; }
 .pricelist .pname { flex: 1 1 auto; }

@@ -61,11 +61,17 @@ function imageSrc(p) {
 }
 
 /** 圖片不存在時換成佔位圖示，不要留破圖 */
+/*
+ * 找不到商品圖時的預設圖。
+ * 用內嵌 SVG，不必多一次請求，也不會因為檔案不存在再觸發一次 onerror。
+ */
+var PLACEHOLDER_IMG = 'data:image/svg+xml,<svg%20xmlns="http://www.w3.org/2000/svg"%20viewBox="0%200%2064%2064"><rect%20width="64"%20height="64"%20fill="%23fff3e8"/><g%20fill="none"%20stroke="%23ffc9ae"%20stroke-width="3.2"%20stroke-linecap="round"%20stroke-linejoin="round"><rect%20x="11"%20y="15"%20width="42"%20height="34"%20rx="6"/><path%20d="M11%2039l11-10%209%208%208-10%2014%2012"/></g><circle%20cx="24"%20cy="27"%20r="3.6"%20fill="%23ffc9ae"/></svg>';
+
 function imgFallback(el) {
-  var ph = document.createElement('span');
-  ph.className = 'ph';
-  ph.textContent = '🏷️';
-  if (el.parentNode) el.parentNode.replaceChild(ph, el);
+  if (el.dataset.ph) return;        // 已經換過就不再處理，避免無限迴圈
+  el.dataset.ph = '1';
+  el.src = PLACEHOLDER_IMG;
+  el.classList.add('is-placeholder');
 }
 
 /* 排序偏好記在瀏覽器（私密瀏覽、停用 cookie 時會失敗，靜默略過） */
