@@ -83,16 +83,25 @@
         <button type="button" class="link-plain" id="clearAll">清空</button>
       </div>
       <div id="cartList" class="hint">還沒選東西，上面挑一挑吧 🐾</div>
-      <label for="note" style="margin-top:12px">備註（選填，套用到本次所有品項）</label>
-      <input id="note" type="text" placeholder="例如：客戶名稱、單號">
     </div>
+    <div class="sb-quick" id="sbQuick" hidden>
+      <div class="pay-row">
+        <select id="payment" aria-label="金流方式">
+          <option value="">金流（未填）</option>
+        </select>
+        <input id="paymentNew" type="text" placeholder="新的金流方式" hidden>
+        <button type="button" class="ghost" id="payNew" aria-label="新增金流方式" title="新增金流方式">＋</button>
+      </div>
+      <input id="note" type="text" placeholder="備註（選填）">
+    </div>
+
     <div class="sb-main">
       <button type="button" class="sb-toggle" id="sbToggle" aria-expanded="false">
         <span class="sb-info">
           <span class="sb-count" id="sbCount">尚未選擇商品</span>
           <span class="sb-amount" id="sbAmount">$0</span>
         </span>
-        <span class="sb-caret" id="sbCaret">▲</span>
+        <span class="sb-caret" id="sbCaret">明細 ▲</span>
       </button>
       <button type="button" id="submit" disabled>送出銷貨</button>
     </div>
@@ -118,6 +127,10 @@ var searchEl = document.getElementById('search');
 var cartListEl = document.getElementById('cartList');
 var submitEl = document.getElementById('submit');
 var noteEl = document.getElementById('note');
+var payEl = document.getElementById('payment');
+var payNewBtn = document.getElementById('payNew');
+var payNewEl = document.getElementById('paymentNew');
+var sbQuick = document.getElementById('sbQuick');
 var salesBody = document.getElementById('salesBody');
 var submitBar = document.getElementById('submitbar');
 var sbPanel = document.getElementById('sbPanel');
@@ -229,7 +242,9 @@ function renderCart() {
     submitEl.textContent = '送出銷貨';
     sbCount.textContent = '尚未選擇商品';
     sbAmount.textContent = '$0';
+    sbQuick.hidden = true;
     setPanel(false);
+    syncBarSpace();
     return;
   }
   var totalQty = 0, totalAmt = 0;
@@ -258,6 +273,7 @@ function renderCart() {
   submitEl.textContent = '送出銷貨';
   sbCount.textContent = list.length + ' 項・' + totalQty + ' 件';
   sbAmount.textContent = '$' + totalAmt;
+  if (sbQuick.hidden) { sbQuick.hidden = false; syncBarSpace(); }
 }
 
 function setQty(id, n) {
@@ -309,6 +325,39 @@ function loadProducts() {
     bodyEl.innerHTML = '<tr><td colspan="5" class="hint">載入失敗：' + escapeHtml(err.message) + '</td></tr>';
     showMsg(msgEl, err.message, 'err');
   });
+}
+
+/* 金流方式：選單來自用過的值，也可以直接新增 */
+function currentPayment() {
+  return payNewEl.hidden ? payEl.value.trim() : payNewEl.value.trim();
+}
+
+function setPayMode(isNew) {
+  payNewEl.hidden = !isNew;
+  payEl.hidden = isNew;
+  payNewBtn.textContent = isNew ? '選既有' : '＋ 新增';
+  if (isNew) payNewEl.focus();
+}
+
+payNewBtn.addEventListener('click', function () { setPayMode(payNewEl.hidden); });
+
+payEl.addEventListener('change', function () {
+  try { localStorage.setItem('inv.lastPayment', payEl.value); } catch (e) { /* 存不進去不影響 */ }
+});
+
+function loadPayments() {
+  return apiCall('payments')
+    .then(function (list) {
+      var last = '';
+      try { last = localStorage.getItem('inv.lastPayment') || ''; } catch (e) { /* 略過 */ }
+      payEl.innerHTML = '<option value="">（未填）</option>' +
+        list.map(function (m) {
+          return '<option value="' + escapeHtml(m.name) + '">' + escapeHtml(m.name) + '</option>';
+        }).join('');
+      // 上次用的還在清單裡就自動選起來，多數情況下收錢方式是固定的
+      if (last && list.some(function (m) { return m.name === last; })) payEl.value = last;
+    })
+    .catch(function () { /* 拿不到就只留「未填」，不擋使用 */ });
 }
 
 function loadSales() {
@@ -384,7 +433,7 @@ function setPanel(open) {
   sbPanel.hidden = !open;
   sheetBackdrop.hidden = !open;
   sbToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-  sbCaret.textContent = open ? '▼' : '▲';
+  sbCaret.textContent = open ? '明細 ▼' : '明細 ▲';
   lockScroll(open);
   syncBarSpace();
 }
@@ -454,7 +503,7 @@ submitEl.addEventListener('click', function () {
   submitEl.textContent = '送出中…';
   ovShow('loading', '登錄中…', '正在寫入試算表，請稍候');
 
-  apiCall('batchSale', { reqId: saleReqId, items: items, note: noteEl.value })
+  apiCall('batchSale', { reqId: saleReqId, items: items, note: noteEl.value, payment: currentPayment() })
     .then(function (res) {
       var rows = res.map(function (r) {
         return '<div class="ov-row"><span>' + escapeHtml(r.name) + '</span>' +
@@ -463,10 +512,17 @@ submitEl.addEventListener('click', function () {
       ovShow('ok', '已登錄 ' + res.length + ' 項',
              '共 ' + totalQty + ' 件　金額 $' + totalAmt, rows);
 
+      var usedPay = currentPayment();
+      if (usedPay) {
+        try { localStorage.setItem('inv.lastPayment', usedPay); } catch (e) { /* 略過 */ }
+      }
       saleReqId = newReqId();
       qty = {};
       noteEl.value = '';
+      payNewEl.value = '';
+      setPayMode(false);
       setPanel(false);
+      loadPayments();          // 新增的方式要出現在選單裡
       return Promise.all([loadProducts(), loadSales()]);
     })
     .catch(function (err) {
@@ -481,6 +537,7 @@ searchEl.addEventListener('input', renderTable);
 
 loadProducts();
 loadSales();
+loadPayments();
 syncBarSpace();
 </script>
 </body>

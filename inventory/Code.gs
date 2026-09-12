@@ -12,7 +12,7 @@ var SS_ID = '1d-z5mWe6_olI2hXZ5Qg0gzBkiTkGcmgUge35QVqeZhQ';
 var PRODUCTS = 'products';
 var SALES = 'sales';
 var PRODUCT_HEADERS = ['id', 'name', 'price', 'initialStock', 'updatedAt'];
-var SALES_HEADERS = ['timestamp', 'productId', 'productName', 'qty', 'note', 'batchId', 'unitPrice'];
+var SALES_HEADERS = ['timestamp', 'productId', 'productName', 'qty', 'note', 'batchId', 'unitPrice', 'payment'];
 
 /**
  * 一次性整理 products 欄位：刪掉第 6 欄以後的殘留資料，並寫上正確的 6 欄標題。
@@ -145,6 +145,7 @@ function route_(action, p) {
     case 'deleteSale': return deleteSale(p);
     case 'deleteBatch': return deleteBatch(p);
     case 'summary': return salesSummary();
+    case 'payments': return paymentMethods();
     default: throw new Error('未知的 action：' + action);
   }
 }
@@ -325,7 +326,8 @@ function recordSale(p) {
     // 只寫銷貨紀錄，庫存是算出來的，不需要（也不該）改商品列
     sheet_(SALES).appendRow([new Date(), id, String(cur[1]), qty,
                              String(p.note || ''), String(p.reqId || ('s' + Date.now())),
-                             num_(cur[2])]);   // 記下當下的單價，日後改價不影響歷史
+                             num_(cur[2]),     // 記下當下的單價，日後改價不影響歷史
+                             String(p.payment || '')]);
 
     return { id: id, name: String(cur[1]), qty: qty, stock: stock - qty };
   } finally {
@@ -386,6 +388,7 @@ function batchSale(p) {
 
     var now = new Date();
     var note = String(p.note || '');
+    var payment = String(p.payment || '');
     var salesRows = [];
     var result = [];
 
@@ -393,7 +396,7 @@ function batchSale(p) {
       var item = items[k];
       var row = rows[index[item.id]];
       var left = num_(row[3]) - (totals[item.id] || 0) - item.qty;
-      salesRows.push([now, item.id, String(row[1]), item.qty, note, batchId, num_(row[2])]);
+      salesRows.push([now, item.id, String(row[1]), item.qty, note, batchId, num_(row[2]), payment]);
       result.push({ id: item.id, name: String(row[1]), qty: item.qty, stock: left });
     }
 
@@ -471,15 +474,36 @@ function deleteBatch(p) {
  * 所以之後調價不會讓歷史金額跟著跑掉。
  * 沒有 unitPrice 的舊紀錄（跑過 backfillSalePrices 前）算 0，並回報筆數。
  */
+/**
+ * 曾經用過的金流方式，最常用的排前面。
+ * 直接從 sales 既有的值推導，不另外維護一張設定表 ——
+ * 使用者在試算表手動補的值也會自動出現在選單裡。
+ */
+function paymentMethods() {
+  var sh = sheet_(SALES);
+  var last = sh.getLastRow();
+  if (last < 2) return [];
+  var rows = sh.getRange(2, 8, last - 1, 1).getValues();
+  var count = {};
+  for (var i = 0; i < rows.length; i++) {
+    var v = String(rows[i][0] || '').trim();
+    if (!v) continue;
+    count[v] = (count[v] || 0) + 1;
+  }
+  return Object.keys(count)
+    .map(function (k) { return { name: k, count: count[k] }; })
+    .sort(function (a, b) { return b.count - a.count || a.name.localeCompare(b.name, 'zh-Hant'); });
+}
+
 function salesSummary() {
   var sh = sheet_(SALES);
   var last = sh.getLastRow();
-  var empty = { total: { count: 0, qty: 0, amount: 0 }, byDate: [], byProduct: [], noPrice: 0 };
+  var empty = { total: { count: 0, qty: 0, amount: 0 }, byDate: [], byProduct: [], byPayment: [], noPrice: 0 };
   if (last < 2) return empty;
 
   var rows = sh.getRange(2, 1, last - 1, SALES_HEADERS.length).getValues();
   var tz = Session.getScriptTimeZone();
-  var byDate = {}, byProduct = {};
+  var byDate = {}, byProduct = {}, byPayment = {};
   var total = { count: 0, qty: 0, amount: 0 };
   var noPrice = 0;
 
@@ -501,6 +525,10 @@ function salesSummary() {
     if (!byProduct[name]) byProduct[name] = { name: name, count: 0, qty: 0, amount: 0 };
     byProduct[name].count++; byProduct[name].qty += qty; byProduct[name].amount += amount;
 
+    var pay = String(r[7] || '').trim() || '（未填）';
+    if (!byPayment[pay]) byPayment[pay] = { name: pay, count: 0, qty: 0, amount: 0 };
+    byPayment[pay].count++; byPayment[pay].qty += qty; byPayment[pay].amount += amount;
+
     total.count++; total.qty += qty; total.amount += amount;
   }
 
@@ -509,7 +537,10 @@ function salesSummary() {
   var prods = Object.keys(byProduct).map(function (k) { return byProduct[k]; })
     .sort(function (a, b) { return b.amount - a.amount || b.qty - a.qty; });
 
-  return { total: total, byDate: dates, byProduct: prods, noPrice: noPrice };
+  var pays = Object.keys(byPayment).map(function (k) { return byPayment[k]; })
+    .sort(function (a, b) { return b.amount - a.amount || b.count - a.count; });
+
+  return { total: total, byDate: dates, byProduct: prods, byPayment: pays, noPrice: noPrice };
 }
 
 function listSales(limit, offset) {
@@ -536,7 +567,8 @@ function listSales(limit, offset) {
       note: String(rows[i][4]),
       batchId: String(rows[i][5] || ''),
       unitPrice: num_(rows[i][6]),
-      amount: num_(rows[i][6]) * num_(rows[i][3])
+      amount: num_(rows[i][6]) * num_(rows[i][3]),
+      payment: String(rows[i][7] || '')
     });
   }
   return { items: items, total: total, hasMore: offset + count < total };
@@ -653,8 +685,10 @@ function runSelfTest() {
 
   // 彙總
   var sum = salesSummary();
-  check('彙總有 total / byDate / byProduct',
-        !!sum.total && Array.isArray(sum.byDate) && Array.isArray(sum.byProduct));
+  check('彙總有 total / byDate / byProduct / byPayment',
+        !!sum.total && Array.isArray(sum.byDate) && Array.isArray(sum.byProduct) && Array.isArray(sum.byPayment));
+  var payTotal = sum.byPayment.reduce(function (a, x) { return a + x.amount; }, 0);
+  check('各金流金額加總 = 總金額', payTotal === sum.total.amount, payTotal + ' vs ' + sum.total.amount);
   var mineSum = sum.byProduct.filter(function (x) { return x.name === '__test__'; })[0];
   check('彙總算得到 __test__', !!mineSum, JSON.stringify(mineSum));
   check('彙總的件數與金額對得上', mineSum.amount === mineSum.qty * 35,

@@ -40,36 +40,33 @@
     <div class="sumtabs" id="sumTabs" hidden>
       <button type="button" class="ghost on" data-tab="date">依日期</button>
       <button type="button" class="ghost" data-tab="product">依商品</button>
+      <button type="button" class="ghost" data-tab="payment">依金流</button>
     </div>
     <div class="table-scroll"><div id="sumBody"></div></div>
   </div>
 
   <div class="card" id="listCard">
     <div class="row" style="margin-bottom:12px">
-      <div style="flex:2 1 200px"><input id="search" type="search" placeholder="搜尋商品名稱或備註"></div>
+      <div style="flex:2 1 200px"><input id="search" type="search" placeholder="搜尋商品、備註或金流"></div>
       <div style="flex:0 0 auto"><button type="button" class="ghost" id="refresh">重新載入</button></div>
     </div>
     <p class="hint" id="summary">載入中…</p>
 
     <div id="list"><p class="hint">載入中…</p></div>
 
-    <div class="actions" id="moreWrap" hidden>
-      <button type="button" class="ghost" id="more">載入更多</button>
-    </div>
   </div>
 </div>
 
 <script src="api.js"></script>
 <script src="dialog.js"></script>
 <script>
-var PAGE = 30;
+// 一次抓完全部。上限只是保險，避免資料量暴增時把瀏覽器塞爆。
+var MAX_ROWS = 5000;
 
 var msgEl = document.getElementById('msg');
 var listEl = document.getElementById('list');
 var summaryEl = document.getElementById('summary');
 var searchEl = document.getElementById('search');
-var moreWrap = document.getElementById('moreWrap');
-var moreBtn = document.getElementById('more');
 
 var sumCard = document.getElementById('sumCard');
 var sumTotal = document.getElementById('sumTotal');
@@ -83,7 +80,6 @@ var listCard = document.getElementById('listCard');
 var loadedOnce = false;
 var items = [];
 var total = 0;
-var hasMore = false;
 var loading = false;
 
 function escapeHtml(s) {
@@ -103,7 +99,7 @@ function visible() {
   var q = searchEl.value.trim().toLowerCase();
   if (!q) return items;
   return items.filter(function (s) {
-    return (s.productName + ' ' + s.note).toLowerCase().indexOf(q) >= 0;
+    return (s.productName + ' ' + s.note + ' ' + (s.payment || '')).toLowerCase().indexOf(q) >= 0;
   });
 }
 
@@ -116,19 +112,22 @@ function groupBatches(list) {
     var key = s.batchId || ('row:' + s.row);
     if (!byKey[key]) {
       byKey[key] = { key: key, batchId: s.batchId, day: splitTs(s.timestamp).day,
-                     time: splitTs(s.timestamp).time, note: s.note, items: [], qty: 0 };
+                     time: splitTs(s.timestamp).time, note: s.note, payment: s.payment,
+                     items: [], qty: 0, amount: 0 };
       out.push(byKey[key]);
     }
     byKey[key].items.push(s);
     byKey[key].qty += s.qty;
+    byKey[key].amount += (s.amount || 0);
     if (!byKey[key].note && s.note) byKey[key].note = s.note;
+    if (!byKey[key].payment && s.payment) byKey[key].payment = s.payment;
   });
   return out;
 }
 
 function render() {
   var list = visible();
-  summaryEl.textContent = '共 ' + total + ' 筆，已載入 ' + items.length +
+  summaryEl.textContent = '共 ' + total + ' 筆' +
     (searchEl.value.trim() ? '，符合搜尋 ' + list.length + ' 筆' : '');
 
   if (!list.length) {
@@ -148,6 +147,8 @@ function render() {
       '<div class="batch-head">' +
         '<span class="b-time">' + escapeHtml(g.time) + '</span>' +
         (multi ? '<span class="b-tag">' + g.items.length + ' 項・' + g.qty + ' 件</span>' : '') +
+        (g.amount ? '<span class="b-amt">$' + g.amount.toLocaleString('en-US') + '</span>' : '') +
+        (g.payment ? '<span class="b-pay">' + escapeHtml(g.payment) + '</span>' : '') +
         (g.note ? '<span class="b-note">' + escapeHtml(g.note) + '</span>' : '') +
         (g.batchId && multi
           ? '<button type="button" class="danger b-del" data-batch="' + escapeHtml(g.batchId) + '">刪整批</button>'
@@ -168,28 +169,23 @@ function render() {
   listEl.innerHTML = html;
 }
 
-function load(reset) {
+function load() {
   if (loading) return Promise.resolve();
   loading = true;
-  if (reset) { items = []; }
-  moreBtn.disabled = true;
 
-  // 三種情境文案不同：第一次進頁、重抓（資料已在畫面上）、往下翻頁
-  var label = !loadedOnce ? '載入中…' : (reset ? '更新中…' : '載入更多…');
-  return withMask(listCard, apiCall('sales', { limit: PAGE, offset: items.length }), label)
+  return withMask(listCard, apiCall('sales', { limit: MAX_ROWS, offset: 0 }),
+                  loadedOnce ? '更新中…' : '載入中…')
     .then(function (res) {
       loadedOnce = true;
-      items = items.concat(res.items || []);
+      items = res.items || [];
       total = res.total || 0;
-      hasMore = !!res.hasMore;
-      moreWrap.hidden = !hasMore;
       render();
     })
     .catch(function (err) {
       listEl.innerHTML = '<p class="hint">載入失敗：' + escapeHtml(err.message) + '</p>';
       showMsg(msgEl, err.message, 'err');
     })
-    .then(function () { loading = false; moreBtn.disabled = false; });
+    .then(function () { loading = false; });
 }
 
 listEl.addEventListener('click', function (e) {
@@ -212,7 +208,7 @@ listEl.addEventListener('click', function (e) {
         return apiCall('deleteBatch', { batchId: bid })
           .then(function (r) {
             ovState('ok', '已刪除 ' + r.count + ' 筆', '剩餘庫存已回補');
-            return Promise.all([load(true), loadSummary()]);
+            return Promise.all([load(), loadSummary()]);
           })
           .catch(function (err) {
             ovState('err', '刪除失敗', err.message);
@@ -240,7 +236,7 @@ listEl.addEventListener('click', function (e) {
         .then(function (r) {
           ovState('ok', '已刪除', r.productName + ' × ' + r.qty +
             (r.stock === null ? '（商品已刪除）' : '，剩餘回到 ' + r.stock));
-          return Promise.all([load(true), loadSummary()]);   // 列號會位移，整個重抓比較保險
+          return Promise.all([load(), loadSummary()]);   // 列號會位移，整個重抓比較保險
         })
         .catch(function (err) {
           ovState('err', '刪除失敗', err.message);
@@ -275,10 +271,12 @@ function renderSummary() {
     b.classList.toggle('on', b.getAttribute('data-tab') === sumTab);
   });
 
-  var rows = sumTab === 'date' ? summary.byDate : summary.byProduct;
+  var rows = sumTab === 'date' ? summary.byDate
+           : sumTab === 'payment' ? (summary.byPayment || [])
+           : summary.byProduct;
   if (!rows.length) { sumBody.innerHTML = '<p class="hint">還沒有銷貨紀錄</p>'; return; }
 
-  var head = sumTab === 'date' ? '日期' : '商品';
+  var head = sumTab === 'date' ? '日期' : (sumTab === 'payment' ? '金流方式' : '商品');
   sumBody.innerHTML =
     '<table class="sumtable"><thead><tr>' +
       '<th>' + head + '</th><th class="r">筆數</th><th class="r">件數</th><th class="r">金額</th>' +
@@ -319,10 +317,9 @@ sumTabs.addEventListener('click', function (e) {
 });
 
 searchEl.addEventListener('input', render);
-moreBtn.addEventListener('click', function () { load(false); });
-document.getElementById('refresh').addEventListener('click', function () { load(true); loadSummary(); });
+document.getElementById('refresh').addEventListener('click', function () { load(); loadSummary(); });
 
-load(true);
+load();
 loadSummary();
 </script>
 </body>
